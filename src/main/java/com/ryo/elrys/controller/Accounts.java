@@ -1,7 +1,8 @@
 package com.ryo.elrys.controller;
 
 import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.response.Response;
+import com.ryo.elrys.response.BodyResponse;
+import com.ryo.elrys.response.DataResponse;
 import com.ryo.elrys.service.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,12 @@ public class Accounts {
     AccountsService accountsService;
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register (AccountsDTO accountsDTO){
-        try{
-            return ResponseEntity.ok()
-                    .body(accountsService.register(accountsDTO));
-        } catch (IOException e) {
-
-            return ResponseEntity.badRequest()
-                    .body("Bad");
-        }
-
+    public ResponseEntity<BodyResponse<DataResponse>> register(AccountsDTO accountsDTO) throws IOException {
+        return ResponseEntity.ok()
+                .body(BodyResponse.<DataResponse>builder()
+                        .status(accountsService.register(accountsDTO))
+                        .data(new DataResponse(accountsDTO))
+                        .build());
 
     }
 }

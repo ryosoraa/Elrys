@@ -19,7 +19,13 @@ public class AccountsService {
 
     @Autowired
     Api api;
-    public RestStatus register(AccountsDTO accountsDTO) throws IOException {
+
+    public String register(AccountsDTO accountsDTO) throws IOException {
+
+        if (accountsDTO.getEmail() == null || accountsDTO.getPassword() == null
+                || accountsDTO.getUsername() == null) {
+            return "Something Missing";
+        }
 
         Random random = new Random();
 
@@ -31,11 +37,9 @@ public class AccountsService {
                 .times(String.valueOf(new Timestamp(System.currentTimeMillis())))
                 .build();
 
-            IndexResponse response =
-                    api.client().index(
-                    api.request(accountsMAP), RequestOptions.DEFAULT);
+        IndexResponse response = api.client().index(api.request(accountsMAP), RequestOptions.DEFAULT);
 
-            return response.status();
+        return String.valueOf(response.status());
 
     }
 }

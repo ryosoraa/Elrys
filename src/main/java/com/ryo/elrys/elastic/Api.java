@@ -10,13 +10,13 @@ import java.util.Random;
 
 public class Api {
 
-    public RestHighLevelClient client(){
+    public RestHighLevelClient client() {
         return new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost("192.168.20.90", 9200, "http")));
     }
 
-    public IndexRequest request(AccountsMAP accountsMAP){
+    public IndexRequest request(AccountsMAP accountsMAP) {
         Random random = new Random();
         return new IndexRequest("elrys")
                 .id(String.valueOf(random.nextLong()))
