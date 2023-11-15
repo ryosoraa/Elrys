@@ -25,7 +25,7 @@ public class AccountsMAP {
         jsonMap.put("email", email);
         jsonMap.put("password", BCrypt.hashpw(password, BCrypt.gensalt()));
         jsonMap.put("username", username);
-        jsonMap.put("times", times);
+        jsonMap.put("register", times);
 
         return jsonMap;
     }

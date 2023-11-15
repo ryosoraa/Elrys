@@ -2,6 +2,8 @@ package com.ryo.elrys.response;
 
 import java.util.HashMap;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,14 +16,10 @@ import lombok.NoArgsConstructor;
 public class BodyResponse<T> {
 
     private String status;
+
+    @JsonInclude
     private T data;
 
-    public HashMap<String, Object> bodyResponse() {
-        HashMap<String, Object> response = new HashMap<>();
-        response.put("status", status);
-        response.put("data", data);
-
-        return response;
-    }
+    private String message;
 
 }
