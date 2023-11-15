@@ -20,6 +20,6 @@ public class Api {
         Random random = new Random();
         return new IndexRequest("elrys")
                 .id(String.valueOf(random.nextLong()))
-                .source(accountsMAP);
+                .source(accountsMAP.register());
     }
 }
