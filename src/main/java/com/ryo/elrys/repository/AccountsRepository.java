@@ -22,21 +22,21 @@ public class AccountsRepository {
     private final RequestApi requestApi = new RequestApi();
 
     public Object register(RegisterDTO registerDTO) throws JsonProcessingException {
-        String bodyUrl = "";
         String idEncode = equipment.idEncoder(registerDTO);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
 
-        if(!requestApi.findById(idEncode).isNull()){
-            return "Customer already exist";
+        if (requestApi.findById(bodyUrl).get("found").asBoolean()) {
+            return "Customer already exists";
         }
 
         AccountsMAP accountsMAP = AccountsMAP.builder()
                 .email(registerDTO.getEmail())
                 .password(BCrypt.hashpw(registerDTO.getPassword(), BCrypt.gensalt()))
+                .username(registerDTO.getUsername())
                 .times(String.valueOf(new Timestamp(System.currentTimeMillis())))
                 .build();
 
-        JsonNode jsonNode = requestApi.register(bodyUrl, accountsMAP.register());
-        return registerDTO;
+        return requestApi.register(bodyUrl, accountsMAP.register());
     }
     
 }

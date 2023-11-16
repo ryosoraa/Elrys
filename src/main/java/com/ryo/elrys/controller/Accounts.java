@@ -1,9 +1,10 @@
 package com.ryo.elrys.controller;
 
 import com.ryo.elrys.model.DTO.AccountsDTO;
+import com.ryo.elrys.model.DTO.RegisterDTO;
 import com.ryo.elrys.response.BodyResponse;
 import com.ryo.elrys.response.DataResponse;
-import com.ryo.elrys.service.AccountsService;
+import com.ryo.elrys.service.interfaces.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,12 +21,9 @@ public class Accounts {
     AccountsService accountsService;
 
     @PostMapping("/register")
-    public ResponseEntity<BodyResponse<DataResponse>> register(AccountsDTO accountsDTO) throws IOException {
+    public ResponseEntity<BodyResponse<?>> register(RegisterDTO registerDTO) throws Exception {
         return ResponseEntity.ok()
-                .body(BodyResponse.<DataResponse>builder()
-                        .status(accountsService.register(accountsDTO))
-                        .data(new DataResponse(accountsDTO))
-                        .build());
+                .body(accountsService.register(registerDTO));
 
     }
 }
