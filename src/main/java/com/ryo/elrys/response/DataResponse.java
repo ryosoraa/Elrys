@@ -2,8 +2,6 @@ package com.ryo.elrys.response;
 
 import java.util.HashMap;
 
-import com.ryo.elrys.model.DTO.AccountsDTO;
-
 import com.ryo.elrys.model.DTO.RegisterDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,11 +24,6 @@ public class DataResponse {
         response.put("username", username);
         return response;
 
-    }
-
-    public DataResponse(AccountsDTO accountsDTO) {
-        this.email = accountsDTO.getEmail();
-        this.username = accountsDTO.getUsername();
     }
 
     public DataResponse(RegisterDTO registerDTO) {

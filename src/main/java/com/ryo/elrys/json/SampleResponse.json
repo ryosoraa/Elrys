@@ -1,0 +1,41 @@
+[
+  [
+    {
+      "status": "Success",
+      "data": {
+        "email": "ryo@gmail.com",
+        "username": "ryo"
+      },
+      "message": "Successful Registration"
+    },
+
+    {
+      "status": "Failed",
+      "message": "Customer already exist"
+    }
+  ],
+  [
+    {
+      "username": "john_doe",
+      "email": "john.doe@example.com",
+      "password": "strong_password123",
+      "full_name": "John Doe",
+      "date_of_birth": "1990-01-15",
+      "address": {
+        "street": "123 Main Street",
+        "city": "Any-town",
+        "state": "CA",
+        "zip_code": "12345",
+        "country": "USA"
+      },
+      "phone_number": "+1-555-1234567",
+      "additional_info": {
+        "gender": "male",
+        "newsletter_subscription": true,
+        "preference": ["sports", "technology"]
+      }
+    }
+
+  ]
+
+]
