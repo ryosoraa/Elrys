@@ -1,6 +1,7 @@
 package com.ryo.elrys.service.implementation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
 import com.ryo.elrys.repository.AccountsRepository;
@@ -30,15 +31,28 @@ public class AccountsServiceImpl implements AccountsService {
 
         return BodyResponse.builder()
                 .status("Success")
-                .data(new DataResponse(registerDTO).dataResponse())
+                .data(new DataResponse(registerDTO).registerResponse())
                 .message("Successful Registration")
                 .build();
     }
 
     @Override
-    public BodyResponse<Object> login(LoginDTO LoginDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'login'");
+    public BodyResponse<Object> login(LoginDTO loginDTO) throws JsonProcessingException {
+        Object loginResponse = accountsRepository.login(loginDTO);
+        System.out.println(String.valueOf(loginResponse));
+
+        if (loginResponse.equals("User not found")){
+            return BodyResponse.builder()
+                    .status("User not found")
+                    .message("Please register your account to continue")
+                    .build();
+        }
+
+        return BodyResponse.builder()
+                .status("Success")
+                .data(new DataResponse((JsonNode) loginResponse).loginResponse())
+                .message("Login successful")
+                .build();
     }
 
 }

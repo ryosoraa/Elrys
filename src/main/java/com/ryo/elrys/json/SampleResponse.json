@@ -34,6 +34,54 @@
         "preference": ["sports", "technology"]
       }
     }
+  ],
+  [
+    {
+      "email" : "john",
+      "username": "john_doe",
+      "id": "ejnfiejbfrrir",
+      "device_info": {
+        "device_type": "smartphone",
+        "device_model": "iPhone X"
+      },
+      "timestamp": "2023-11-15T12:30:00"
+    }
+
+  ],
+  [
+    {
+      "status": "success",
+      "data": {
+        "user_id": 123,
+        "email": "john@gmail.com",
+        "username": "john_doe",
+        "timestamp": "2023-11-15T13:30:00"
+      },
+      "message": "Login berhasil."
+    }
+
+  ],
+  [
+    {
+      "username": "gitakuhehe",
+      "email": "gita@gmail.com",
+      "password": "gita",
+      "phone": 3298470,
+      "fullName": "Gita Sekar Andarini ",
+      "dateOfBirth": "2001-6-31",
+      "gender": "female",
+      "street": "Jakarta",
+      "city": "Jakarta",
+      "postalCode": 83274,
+      "country": "Indonesia",
+      "subscription": true,
+      "preference": [
+        "Loki",
+        "film"
+      ]
+    }
+  ],
+  [
 
   ]
 

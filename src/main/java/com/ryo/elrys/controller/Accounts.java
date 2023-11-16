@@ -1,5 +1,6 @@
 package com.ryo.elrys.controller;
 
+import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
 import com.ryo.elrys.response.BodyResponse;
 import com.ryo.elrys.service.interfaces.AccountsService;
@@ -20,6 +21,12 @@ public class Accounts {
     public ResponseEntity<BodyResponse<Object>> register(RegisterDTO registerDTO) throws Exception {
         return ResponseEntity.ok()
                 .body(accountsService.register(registerDTO));
-
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<BodyResponse<Object>> login(LoginDTO loginDTO) throws Exception {
+        return ResponseEntity.ok()
+                .body(accountsService.login(loginDTO));
+    }
+
 }

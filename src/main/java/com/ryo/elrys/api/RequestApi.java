@@ -33,7 +33,7 @@ public class RequestApi {
         String responds = response.getEntity(String.class);
         return objectMapper.readValue(responds, JsonNode.class);
     }
-    
+
     // REGISTER
     public JsonNode register(String url, HashMap<String, Object> regisetrMap) throws JsonProcessingException {
         WebResource webResource = client.resource(url);
