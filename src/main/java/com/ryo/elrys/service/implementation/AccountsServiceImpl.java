@@ -2,6 +2,7 @@ package com.ryo.elrys.service.implementation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ryo.elrys.model.DTO.DeleteDTO;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
 import com.ryo.elrys.repository.AccountsRepository;
@@ -88,8 +89,18 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     @Override
-    public BodyResponse<Object> delete(String email) throws Exception {
-        return null;
+    public BodyResponse<Object> delete(DeleteDTO deleteDTO) throws Exception {
+        Object findResponse = accountsRepository.delete(deleteDTO);
+        if(findResponse.equals("Accounts not found")){
+            return BodyResponse.builder()
+                    .status("Failed")
+                    .message("Accounts nof found")
+                    .build();
+        }
+        return BodyResponse.builder()
+                .status("Success")
+                .message("Delete Success")
+                .build();
     }
 
     @Override

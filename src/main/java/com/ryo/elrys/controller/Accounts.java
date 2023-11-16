@@ -33,10 +33,12 @@ public class Accounts {
                 .body(accountsService.findByEmail(email));
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<BodyResponse<Object>> update(@RequestBody RegisterDTO registerDTO) throws Exception {
         return ResponseEntity.ok()
                 .body(accountsService.update(registerDTO));
     }
+
+
 
 }

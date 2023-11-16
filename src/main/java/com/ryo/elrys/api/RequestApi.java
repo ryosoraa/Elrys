@@ -68,5 +68,16 @@ public class RequestApi {
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
+    public JsonNode delete(String url) throws JsonProcessingException {
+        WebResource webResource = client.resource(url);
+        System.out.println(url);
+
+        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
+                .delete(ClientResponse.class);
+
+        String responds = response.getEntity(String.class);
+        return objectMapper.readValue(responds, JsonNode.class);
+    }
+
 
 }

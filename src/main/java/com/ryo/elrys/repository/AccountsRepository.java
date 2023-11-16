@@ -3,6 +3,7 @@ package com.ryo.elrys.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ryo.elrys.api.RequestApi;
+import com.ryo.elrys.model.DTO.DeleteDTO;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
 import com.ryo.elrys.model.MAP.LoginMap;
@@ -42,7 +43,6 @@ public class AccountsRepository {
     public Object login(LoginDTO loginDTO) throws JsonProcessingException {
         Random random = new Random();
         String idEncode = equipment.idEncoder(loginDTO);
-        String loginEncode = equipment.loginEncode(loginDTO);
 
         String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
         String loginUrl = "http://192.168.20.90:9200/elrys_log/_doc/".concat(String.valueOf(random.nextLong()));
@@ -90,6 +90,19 @@ public class AccountsRepository {
 
         return requestApi.register(bodyUrl,new RegisterMAP(registerDTO).register());
 
+    }
+
+
+    // Delete
+    public Object delete(DeleteDTO deleteDTO) throws JsonProcessingException {
+        String idEncode = equipment.idEncoder(deleteDTO);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+
+        if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
+            return "Accounts not found";
+        }
+
+        return requestApi.delete(bodyUrl);
     }
     
 }
