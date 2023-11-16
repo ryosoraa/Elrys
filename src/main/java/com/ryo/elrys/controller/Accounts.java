@@ -1,5 +1,6 @@
 package com.ryo.elrys.controller;
 
+import com.ryo.elrys.model.DTO.DeleteDTO;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
 import com.ryo.elrys.response.BodyResponse;
@@ -37,6 +38,12 @@ public class Accounts {
     public ResponseEntity<BodyResponse<Object>> update(@RequestBody RegisterDTO registerDTO) throws Exception {
         return ResponseEntity.ok()
                 .body(accountsService.update(registerDTO));
+    }
+
+    @PutMapping("/delete")
+    public ResponseEntity<BodyResponse<Object>> delete(@RequestBody DeleteDTO deleteDTO) throws Exception {
+        return ResponseEntity.ok()
+                .body(accountsService.delete(deleteDTO));
     }
 
 
