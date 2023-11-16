@@ -55,4 +55,38 @@ public class AccountsServiceImpl implements AccountsService {
                 .build();
     }
 
+    @Override
+    public BodyResponse<Object> findByEmail(String email) throws Exception {
+        Object findResponse = accountsRepository.findByEmail(email);
+        System.out.println(findResponse.equals("not found"));
+        if(findResponse.equals("not found")){
+            return BodyResponse.builder()
+                    .status("failed")
+                    .message("Accounts not found")
+                    .build();
+        }
+        return BodyResponse.builder()
+                .status("Success")
+                .data(findResponse)
+                .message("Account in Discover")
+                .build();
+    }
+
+    @Override
+    public BodyResponse<Object> update(RegisterDTO registerDTO) throws Exception {
+
+
+        return null;
+    }
+
+    @Override
+    public BodyResponse<Object> delete(String email) throws Exception {
+        return null;
+    }
+
+    @Override
+    public BodyResponse<Object> findLogs(String email) throws Exception {
+        return null;
+    }
+
 }

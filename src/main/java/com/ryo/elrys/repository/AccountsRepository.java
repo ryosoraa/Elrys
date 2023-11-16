@@ -54,13 +54,26 @@ public class AccountsRepository {
         }
 
         JsonNode jsonNode = requestApi.login(loginUrl, new LoginMap(
-                loginDTO, /*Paramater 1 untuk mengambil assets dari loginDTO*/
-                idEncode, /*Paramater 2 Untuk set Accounts_id Reference*/
+                loginDTO, /*Parameter 1 untuk mengambil assets dari loginDTO*/
+                idEncode, /*Parameter 2 Untuk set Accounts_id Reference*/
                 String.valueOf(responds.at("/_source/username").asText())).login());
-                /*Paramater 3 untuk set username, mengambil dari respond requestAPi karena si loginDTO tidak ada field username*/
+                /*Parameter 3 untuk set username, mengambil dari respond requestAPi karena si loginDTO tidak ada field username*/
 
         return responds;
 
+    }
+
+    public Object findByEmail(String email) throws JsonProcessingException {
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_search";
+        String bodyRequest = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
+
+        JsonNode jsonNode = requestApi.findByEmail(bodyUrl, bodyRequest);
+        
+        if(!String.valueOf(jsonNode.at("/hits/hits/0/_source/email").asText()).equals(email)){
+            return "not found";
+        }
+
+        return jsonNode;
     }
     
 }

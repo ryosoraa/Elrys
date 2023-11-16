@@ -6,9 +6,7 @@ import com.ryo.elrys.response.BodyResponse;
 import com.ryo.elrys.service.interfaces.AccountsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -27,6 +25,12 @@ public class Accounts {
     public ResponseEntity<BodyResponse<Object>> login(LoginDTO loginDTO) throws Exception {
         return ResponseEntity.ok()
                 .body(accountsService.login(loginDTO));
+    }
+
+    @GetMapping("/byEmail")
+    public ResponseEntity<BodyResponse<Object>> findByEmail(@RequestParam String email) throws Exception {
+        return ResponseEntity.ok()
+                .body(accountsService.findByEmail(email));
     }
 
 }
