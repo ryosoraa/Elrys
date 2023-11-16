@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.ryo.elrys.model.DTO.LoginDTO;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -21,6 +22,7 @@ public class RequestApi {
 
     private final Client client = new Client();
 
+    // FIND BY ID
     public JsonNode findById(String url) throws JsonProcessingException {
         WebResource webResource = client.resource(url);
         System.out.println(url);
@@ -31,12 +33,26 @@ public class RequestApi {
         String responds = response.getEntity(String.class);
         return objectMapper.readValue(responds, JsonNode.class);
     }
-
-    public JsonNode register(String url, HashMap<String, Object> jsonMap) throws JsonProcessingException {
+    
+    // REGISTER
+    public JsonNode register(String url, HashMap<String, Object> regisetrMap) throws JsonProcessingException {
         WebResource webResource = client.resource(url);
 
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, objectMapper.writeValueAsString(jsonMap));
+                .post(ClientResponse.class, objectMapper.writeValueAsString(regisetrMap));
+
+        String responds = response.getEntity(String.class);
+        return objectMapper.readValue(responds, JsonNode.class);
+
+        /*return response.getEntity(JsonNode.class);*/
+    }
+
+    // LOGIN
+    public JsonNode login(String bodyUrl, HashMap<String, Object> loginMap) throws JsonProcessingException {
+        WebResource webResource = client.resource(bodyUrl);
+
+        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, objectMapper.writeValueAsString(loginMap));
 
         String responds = response.getEntity(String.class);
         return objectMapper.readValue(responds, JsonNode.class);
