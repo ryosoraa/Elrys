@@ -24,7 +24,6 @@
       "address": {
         "street": "123 Main Street",
         "city": "Any-town",
-        "state": "CA",
         "zip_code": "12345",
         "country": "USA"
       },

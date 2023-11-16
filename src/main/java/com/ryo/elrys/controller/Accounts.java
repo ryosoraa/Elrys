@@ -18,6 +18,7 @@ public class Accounts {
 
     @PostMapping("/register")
     public ResponseEntity<BodyResponse<?>> register(RegisterDTO registerDTO) throws Exception {
+        System.out.println("masukkkk");
         return ResponseEntity.ok()
                 .body(accountsService.register(registerDTO));
 

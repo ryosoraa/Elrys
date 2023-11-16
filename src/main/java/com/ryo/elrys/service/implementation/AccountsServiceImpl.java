@@ -3,7 +3,6 @@ package com.ryo.elrys.service.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
-import com.ryo.elrys.model.MAP.AccountsMAP;
 import com.ryo.elrys.repository.AccountsRepository;
 import com.ryo.elrys.response.BodyResponse;
 import com.ryo.elrys.response.DataResponse;
