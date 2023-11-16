@@ -63,6 +63,8 @@ public class AccountsRepository {
 
     }
 
+
+    // Find By Email
     public Object findByEmail(String email) throws JsonProcessingException {
         String bodyUrl = "http://192.168.20.90:9200/elrys/_search";
         String bodyRequest = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
@@ -74,6 +76,20 @@ public class AccountsRepository {
         }
 
         return jsonNode;
+    }
+
+
+    // Update
+    public Object update(RegisterDTO registerDTO) throws JsonProcessingException {
+        String idEncode = equipment.idEncoder(registerDTO);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+
+        if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
+            return "Accounts not found";
+        }
+
+        return requestApi.register(bodyUrl,new RegisterMAP(registerDTO).register());
+
     }
     
 }

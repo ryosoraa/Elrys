@@ -68,16 +68,5 @@ public class RequestApi {
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
-    public JsonNode update(String url, HashMap<String, Object> regisetrMap) throws JsonProcessingException {
-        WebResource webResource = client.resource(url);
-
-        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, objectMapper.writeValueAsString(regisetrMap));
-
-        String responds = response.getEntity(String.class);
-        return objectMapper.readValue(responds, JsonNode.class);
-
-        /*return response.getEntity(JsonNode.class);*/
-    }
 
 }

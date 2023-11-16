@@ -39,7 +39,6 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public BodyResponse<Object> login(LoginDTO loginDTO) throws JsonProcessingException {
         Object loginResponse = accountsRepository.login(loginDTO);
-        System.out.println(String.valueOf(loginResponse));
 
         if (loginResponse.equals("User not found")){
             return BodyResponse.builder()
@@ -58,7 +57,7 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public BodyResponse<Object> findByEmail(String email) throws Exception {
         Object findResponse = accountsRepository.findByEmail(email);
-        System.out.println(findResponse.equals("not found"));
+
         if(findResponse.equals("not found")){
             return BodyResponse.builder()
                     .status("failed")
@@ -74,9 +73,18 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     public BodyResponse<Object> update(RegisterDTO registerDTO) throws Exception {
-
-
-        return null;
+        Object findResponse =  accountsRepository.update(registerDTO);
+        if(findResponse.equals("Accounts not found")){
+            return BodyResponse.builder()
+                    .status("Failed")
+                    .message("Accounts nof found")
+                    .build();
+        }
+        return BodyResponse.builder()
+                .status("Success")
+                .data(findResponse)
+                .message("Update Success")
+                .build();
     }
 
     @Override
