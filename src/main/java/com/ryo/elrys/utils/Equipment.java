@@ -1,11 +1,11 @@
 package com.ryo.elrys.utils;
 
+import com.ryo.elrys.model.DTO.AccountsDTO;
 import com.ryo.elrys.model.DTO.DeleteDTO;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import com.ryo.elrys.model.DTO.RegisterDTO;
-
 
 public class Equipment {
 
@@ -24,5 +24,9 @@ public class Equipment {
         return DigestUtils.md5Hex(dataToEncode);
     }
 
+    public String idEncoder(AccountsDTO accountsDTO) {
+        String dataToEncode = accountsDTO.getEmail() + accountsDTO.getPassword();
+        return DigestUtils.md5Hex(dataToEncode);
+    }
 
 }

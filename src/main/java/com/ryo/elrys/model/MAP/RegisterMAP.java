@@ -1,5 +1,6 @@
 package com.ryo.elrys.model.MAP;
 
+import com.ryo.elrys.model.DTO.AccountsDTO;
 import com.ryo.elrys.model.DTO.AdditionalInfoDTO;
 import com.ryo.elrys.model.DTO.AddressDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
@@ -20,35 +21,49 @@ public class RegisterMAP {
     private String times;
     private String fullName;
     private String dob;
+
+    // Address
     private String street;
     private String city;
     private Integer postalCode;
     private String country;
+    private String coordinate;
+
+    // Additional info
     private Integer phone;
     private String gender;
     private Boolean subscription;
     private List<String> preference;
+    private String occupation;
 
+    // Education
+    private String degree;
+    private String major;
+    private String school;
 
-    public HashMap<String, Object> register(){
-        HashMap<String, Object> register = new HashMap<>();
+    private List<String> interests;
+    private List<String> skills;
+    private List<String> languages;
 
-        register.put("email", email);
-        register.put("password", BCrypt.hashpw(password, BCrypt.gensalt()));
-        register.put("register", times);
-        register.put("username", username);
-        register.put("full_name", fullName);
-        register.put("date_of_birth", dob);
-        register.put("address", address());
-        register.put("phone_number", phone);
-        register.put("additional_info", info());
+    public HashMap<String, Object> user() {
+        HashMap<String, Object> user = new HashMap<>();
 
-        return register;
+        user.put("email", email);
+        user.put("password", BCrypt.hashpw(password, BCrypt.gensalt()));
+        user.put("registe", times);
+        user.put("username", username);
+        user.put("full_name", fullName);
+        user.put("date_of_birth", dob);
+        user.put("address", address());
+        user.put("phone_number", phone);
+        user.put("additional_info", info());
+
+        return user;
     }
 
-    public HashMap<String, Object> address(){
+    public HashMap<String, Object> address() {
         HashMap<String, Object> address = new HashMap<>();
-        
+
         address.put("street", street);
         address.put("city", city);
         address.put("postal_Code", postalCode);
@@ -57,32 +72,53 @@ public class RegisterMAP {
         return address;
     }
 
-    public HashMap<String, Object> info(){
-        HashMap<String, Object> address = new HashMap<>();
+    public HashMap<String, Object> info() {
+        HashMap<String, Object> info = new HashMap<>();
 
-        address.put("gender", gender);
-        address.put("newsletter_subscription", subscription);
-        address.put("preference", preference);
-        address.put("country", country);
+        info.put("gender", gender);
+        info.put("newsletter_subscription", subscription);
+        info.put("preference", preference);
+        info.put("country", country);
+        info.put("education", education());
+        info.put("occupation", occupation);
+        info.put("interests", interests);
+        info.put("skills", skills);
+        info.put("languages", languages);
 
-        return address;
+        return info;
     }
 
-    public RegisterMAP(RegisterDTO registerDTO){
-        System.out.println("fulname -> " + registerDTO.getFullName());
-        this.email = registerDTO.getEmail();
-        this.password = registerDTO.getPassword();
-        this.username = registerDTO.getUsername();
+    public HashMap<String, Object> education() {
+        HashMap<String, Object> education = new HashMap<>();
+
+        education.put("degree", degree);
+        education.put("major", major);
+        education.put("school", school);
+
+        return education;
+    }
+
+    public RegisterMAP(AccountsDTO accountsDTO) {
+        this.email = accountsDTO.getEmail();
+        this.password = accountsDTO.getPassword();
         this.times = String.valueOf(new Timestamp(System.currentTimeMillis()));
-        this.fullName = registerDTO.getFullName();
-        this.dob = registerDTO.getDateOfBirth();
-        this.street = registerDTO.getStreet();
-        this.city = registerDTO.getCity();
-        this.postalCode = registerDTO.getPostalCode();
-        this.country = registerDTO.getCountry();
-        this.phone = registerDTO.getPhone();
-        this.gender = registerDTO.getGender();
-        this.subscription = registerDTO.getSubscription();
-        this.preference = registerDTO.getPreference();
+        this.fullName = null;
+        this.dob = null;
+        this.street = null;
+        this.city = null;
+        this.postalCode = null;
+        this.country = null;
+        this.coordinate = null;
+        this.phone = null;
+        this.gender = null;
+        this.subscription = null;
+        this.preference = null;
+        this.occupation = null;
+        this.degree = null;
+        this.major = null;
+        this.school = null;
+        this.interests = null;
+        this.skills = null;
+        this.languages = null;
     }
 }

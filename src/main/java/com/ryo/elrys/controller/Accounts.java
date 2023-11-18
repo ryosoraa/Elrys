@@ -1,5 +1,6 @@
 package com.ryo.elrys.controller;
 
+import com.ryo.elrys.model.DTO.AccountsDTO;
 import com.ryo.elrys.model.DTO.DeleteDTO;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
@@ -17,9 +18,9 @@ public class Accounts {
     AccountsService accountsService;
 
     @PostMapping("/register")
-    public ResponseEntity<BodyResponse<Object>> register(RegisterDTO registerDTO) throws Exception {
+    public ResponseEntity<BodyResponse<Object>> register(AccountsDTO accountsDTO) throws Exception {
         return ResponseEntity.ok()
-                .body(accountsService.register(registerDTO));
+                .body(accountsService.register(accountsDTO));
     }
 
     @PostMapping("/login")
@@ -40,12 +41,10 @@ public class Accounts {
                 .body(accountsService.update(registerDTO));
     }
 
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<BodyResponse<Object>> delete(@RequestBody DeleteDTO deleteDTO) throws Exception {
         return ResponseEntity.ok()
                 .body(accountsService.delete(deleteDTO));
     }
-
-
 
 }

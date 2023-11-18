@@ -2,6 +2,7 @@ package com.ryo.elrys.service.implementation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ryo.elrys.model.DTO.AccountsDTO;
 import com.ryo.elrys.model.DTO.DeleteDTO;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
@@ -19,10 +20,10 @@ public class AccountsServiceImpl implements AccountsService {
     AccountsRepository accountsRepository;
 
     @Override
-    public BodyResponse<Object> register(RegisterDTO registerDTO) throws JsonProcessingException {
-        Object response = accountsRepository.register(registerDTO);
+    public BodyResponse<Object> register(AccountsDTO accountsDTO) throws JsonProcessingException {
+        Object response = accountsRepository.register(accountsDTO);
 
-        if(response.equals("Customer already exists")){
+        if (response.equals("Customer already exists")) {
             return BodyResponse.builder()
                     .status("Failed")
                     .data(null)
@@ -32,7 +33,7 @@ public class AccountsServiceImpl implements AccountsService {
 
         return BodyResponse.builder()
                 .status("Success")
-                .data(new DataResponse(registerDTO).registerResponse())
+                .data(new DataResponse(accountsDTO).registerResponse())
                 .message("Successful Registration")
                 .build();
     }
@@ -41,7 +42,7 @@ public class AccountsServiceImpl implements AccountsService {
     public BodyResponse<Object> login(LoginDTO loginDTO) throws JsonProcessingException {
         Object loginResponse = accountsRepository.login(loginDTO);
 
-        if (loginResponse.equals("User not found")){
+        if (loginResponse.equals("User not found")) {
             return BodyResponse.builder()
                     .status("User not found")
                     .message("Please register your account to continue")
@@ -59,7 +60,7 @@ public class AccountsServiceImpl implements AccountsService {
     public BodyResponse<Object> findByEmail(String email) throws Exception {
         Object findResponse = accountsRepository.findByEmail(email);
 
-        if(findResponse.equals("not found")){
+        if (findResponse.equals("not found")) {
             return BodyResponse.builder()
                     .status("failed")
                     .message("Accounts not found")
@@ -74,8 +75,8 @@ public class AccountsServiceImpl implements AccountsService {
 
     @Override
     public BodyResponse<Object> update(RegisterDTO registerDTO) throws Exception {
-        Object findResponse =  accountsRepository.update(registerDTO);
-        if(findResponse.equals("Accounts not found")){
+        Object findResponse = accountsRepository.update(registerDTO);
+        if (findResponse.equals("Accounts not found")) {
             return BodyResponse.builder()
                     .status("Failed")
                     .message("Accounts nof found")
@@ -91,7 +92,7 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public BodyResponse<Object> delete(DeleteDTO deleteDTO) throws Exception {
         Object findResponse = accountsRepository.delete(deleteDTO);
-        if(findResponse.equals("Accounts not found")){
+        if (findResponse.equals("Accounts not found")) {
             return BodyResponse.builder()
                     .status("Failed")
                     .message("Accounts nof found")
@@ -101,11 +102,6 @@ public class AccountsServiceImpl implements AccountsService {
                 .status("Success")
                 .message("Delete Success")
                 .build();
-    }
-
-    @Override
-    public BodyResponse<Object> findLogs(String email) throws Exception {
-        return null;
     }
 
 }

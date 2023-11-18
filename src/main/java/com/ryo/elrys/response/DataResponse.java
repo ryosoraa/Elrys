@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ryo.elrys.model.DTO.AccountsDTO;
 import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.model.DTO.RegisterDTO;
 import lombok.AllArgsConstructor;
@@ -40,9 +41,8 @@ public class DataResponse {
 
     }
 
-    public DataResponse(RegisterDTO registerDTO) {
-        this.email = registerDTO.getEmail();
-        this.username = registerDTO.getUsername();
+    public DataResponse(AccountsDTO accountsDTO) {
+        this.email = accountsDTO.getEmail();
     }
 
     public DataResponse(JsonNode jsonNode) {
