@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.elrys.api.RequestApi;
 import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.UpdateDTO;
+import com.ryo.elrys.model.DTO.UserDTO;
 import com.ryo.elrys.model.MAP.LoginMap;
-import com.ryo.elrys.security.BCrypt;
 import com.ryo.elrys.utils.Equipment;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class AccountsRepository {
             return "Customer already exists";
         }
 
-        return requestApi.register(bodyUrl, mapper.convertValue(new UpdateDTO(accountsDTO), Map.class));
+        return requestApi.register(bodyUrl, mapper.convertValue(new UserDTO(accountsDTO), Map.class));
     }
 
     // LOGIN
@@ -70,6 +69,7 @@ public class AccountsRepository {
         String bodyRequest = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
 
         JsonNode jsonNode = requestApi.findByEmail(bodyUrl, bodyRequest);
+        System.out.println(jsonNode.toPrettyString());
 
         if (!String.valueOf(jsonNode.at("/hits/hits/0/_source/email").asText()).equals(email)) {
             return "not found";
@@ -79,9 +79,9 @@ public class AccountsRepository {
     }
 
     // Update
-    public Object update(UpdateDTO updateDTO) throws JsonProcessingException {
+    public Object update(UserDTO userDTO) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        String idEncode = equipment.idEncoder(updateDTO);
+        String idEncode = equipment.idEncoder(userDTO);
         String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
 
         if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
@@ -89,7 +89,7 @@ public class AccountsRepository {
         }
 
         System.out.println("masuk repo");
-        return requestApi.register(bodyUrl, mapper.convertValue(updateDTO, Map.class));
+        return requestApi.register(bodyUrl, mapper.convertValue(userDTO, Map.class));
 
     }
 
@@ -97,11 +97,13 @@ public class AccountsRepository {
     public Object delete(AccountsDTO accountsDTO) throws JsonProcessingException {
         String idEncode = equipment.idEncoder(accountsDTO);
         String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+        String bodyUrl2 = "http://192.168.20.90:9200/elrys_log/_delete_by_query";
+        String request = String.format("{\"query\": {\"term\": {\"id.keyword\": \"%s\"}}}", idEncode);
 
         if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
             return "Accounts not found";
         }
-
+        requestApi.delete(bodyUrl2, request);
         return requestApi.delete(bodyUrl);
     }
 

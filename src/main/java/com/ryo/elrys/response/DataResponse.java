@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.UpdateDTO;
+import com.ryo.elrys.model.DTO.UserDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,14 +19,12 @@ import lombok.NoArgsConstructor;
 public class DataResponse {
 
     private String email;
-    private String username;
     private String timesTamp;
 
     public HashMap<String, String> registerResponse() {
 
         HashMap<String, String> response = new HashMap<>();
         response.put("email", email);
-        response.put("username", username);
         return response;
 
     }
@@ -35,7 +33,6 @@ public class DataResponse {
 
         HashMap<String, String> response = new HashMap<>();
         response.put("email", email);
-        response.put("username", username);
         response.put("timestamp", timesTamp);
         return response;
 
@@ -45,13 +42,12 @@ public class DataResponse {
         this.email = accountsDTO.getEmail();
     }
 
-    public DataResponse(UpdateDTO updateDTO) {
-        this.email = updateDTO.getEmail();
+    public DataResponse(UserDTO userDTO) {
+        this.email = userDTO.getEmail();
     }
 
     public DataResponse(JsonNode jsonNode) {
         this.email = String.valueOf(jsonNode.at("/_source/email").asText());
-        this.username = String.valueOf(jsonNode.at("/_source/username").asText());
         this.timesTamp = String.valueOf(new Timestamp(System.currentTimeMillis()));
     }
 

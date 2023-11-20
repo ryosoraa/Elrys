@@ -13,9 +13,5 @@ public class ElasticConfiguration {
         return new Equipment();
     }
 
-    @Bean
-    public ObjectMapper mapper() {
-        return new ObjectMapper();
-    }
 
 }

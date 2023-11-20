@@ -3,7 +3,7 @@ package com.ryo.elrys.service.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.UpdateDTO;
+import com.ryo.elrys.model.DTO.UserDTO;
 import com.ryo.elrys.repository.AccountsRepository;
 import com.ryo.elrys.response.BodyResponse;
 import com.ryo.elrys.response.DataResponse;
@@ -42,8 +42,8 @@ public class AccountsServiceImpl implements AccountsService {
 
         if (loginResponse.equals("User not found")) {
             return BodyResponse.builder()
-                    .status("User not found")
-                    .message("Please register your account to continue")
+                    .status("Failed")
+                    .message("User not found")
                     .build();
         }
 
@@ -60,7 +60,7 @@ public class AccountsServiceImpl implements AccountsService {
 
         if (findResponse.equals("not found")) {
             return BodyResponse.builder()
-                    .status("failed")
+                    .status("Failed")
                     .message("Accounts not found")
                     .build();
         }
@@ -72,8 +72,8 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     @Override
-    public BodyResponse<Object> update(UpdateDTO updateDTO) throws Exception {
-        Object findResponse = accountsRepository.update(updateDTO);
+    public BodyResponse<Object> update(UserDTO userDTO) throws Exception {
+        Object findResponse = accountsRepository.update(userDTO);
         if (findResponse.equals("Accounts not found")) {
             return BodyResponse.builder()
                     .status("Failed")

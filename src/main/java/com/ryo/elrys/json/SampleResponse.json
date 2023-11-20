@@ -87,7 +87,7 @@
       "email": "john.doe@example.com",
       "password": "strong_password123",
       "full_name": "John Doe",
-      "date_of_birth": "1990-01-15",
+      "dateOfBirth": "1990-01-15",
       "address": {
         "street": "123 Main Street",
         "city": "Anytown",

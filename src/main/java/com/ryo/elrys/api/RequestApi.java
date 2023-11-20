@@ -14,16 +14,86 @@ import com.sun.jersey.api.client.WebResource;
 import javax.ws.rs.core.MediaType;
 
 public class RequestApi {
-
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    private final Client client = new Client();
-
-    ApiClient apiClient = new ApiClient();
+    ApiClient client = new ApiClient();
 
     // FIND BY ID
-    public JsonNode findById(String url) throws JsonProcessingException {
-        WebResource webResource = client.resource(url);
+    public JsonNode findById(String bodyUrl) throws JsonProcessingException {
+//        System.out.println( client.postRequest(bodyUrl).toPrettyString());
+        return client.getRequest(bodyUrl);
+    }
+
+    // REGISTER
+    public JsonNode register(String bodyUrl, Object request) throws JsonProcessingException {
+        return client.postRequest(bodyUrl, request);
+    }
+
+    // LOGIN
+    public JsonNode login(String bodyUrl, Object request) throws JsonProcessingException {
+        return client.postRequest(bodyUrl, request);
+    }
+
+    public JsonNode findByEmail(String bodyUrl, String request) throws JsonProcessingException {
+        return client.findRequest(bodyUrl, request);
+}
+
+    public JsonNode delete(String bodyUrl) throws JsonProcessingException {
+        return client.deleteRequest(bodyUrl);
+    }
+
+    public JsonNode delete(String bodyUrl, String request) throws JsonProcessingException {
+        return client.deleteRequest(bodyUrl, request);
+    }
+
+}
+
+/**
+ * ApiClient
+ */
+class ApiClient {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final Client client = new Client();
+
+    /**
+     * Mengirim Request HTTP POST dengan data JsonString dan mengembalikan hasilnya sebagai JsonNode.
+     *
+     * @param bodyUrl URL tujuan Request
+     * @param request Objek yang akan dikirim sebagai payload JSON
+     * @return JsonNode response dari Request
+     */
+    public JsonNode postRequest(String bodyUrl, Object request) throws JsonProcessingException, UniformInterfaceException, ClientHandlerException {
+        WebResource webResource = client.resource(bodyUrl);
+        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, objectMapper.writeValueAsString(request));
+
+        String responds = response.getEntity(String.class);
+        return objectMapper.readValue(responds, JsonNode.class);
+    }
+
+
+    /**
+     * Mengirim Request HTTP POST tanpa payload dan mengembalikan hasilnya sebagai JSON.
+     *
+     * @param bodyUrl URL tujuan Request
+     * @return JsonNode response dari Request
+     */
+    public JsonNode postRequest(String bodyUrl) throws JsonProcessingException {
+        WebResource webResource = client.resource(bodyUrl);
+        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class);
+
+        String responds = response.getEntity(String.class);
+        return objectMapper.readValue(responds, JsonNode.class);
+    }
+
+
+    /**
+     * Mengirim Request HTTP GET tanpa payload dan mengembalikan hasilnya sebagai JSON.
+     *
+     * @param bodyUrl URL tujuan Request
+     * @return JsonNode response dari Request
+     */
+    public JsonNode getRequest(String bodyUrl) throws JsonProcessingException {
+        WebResource webResource = client.resource(bodyUrl);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
 
@@ -31,33 +101,17 @@ public class RequestApi {
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
-    // REGISTER
-    public JsonNode register(String url, Object map) throws JsonProcessingException {
-        return apiClient.postRequest(url, map);
-    }
-
-    // LOGIN
-    public JsonNode login(String bodyUrl, Object map) throws JsonProcessingException {
+    public JsonNode findRequest(String bodyUrl, String request) throws JsonProcessingException {
         WebResource webResource = client.resource(bodyUrl);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, objectMapper.writeValueAsString(map));
+                .post(ClientResponse.class, request);
 
         String responds = response.getEntity(String.class);
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
-    public JsonNode findByEmail(String bodyUrl, String bodyRequest) throws JsonProcessingException {
+    public JsonNode deleteRequest(String bodyUrl) throws JsonProcessingException, UniformInterfaceException, ClientHandlerException {
         WebResource webResource = client.resource(bodyUrl);
-        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, bodyRequest);
-
-        String responds = response.getEntity(String.class);
-        return objectMapper.readValue(responds, JsonNode.class);
-    }
-
-    public JsonNode delete(String url) throws JsonProcessingException {
-        WebResource webResource = client.resource(url);
-        System.out.println(url);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
                 .delete(ClientResponse.class);
 
@@ -65,29 +119,10 @@ public class RequestApi {
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
-}
-
-/**
- * InnerRequestApi
- */
-class ApiClient {
-    ObjectMapper objectMapper = new ObjectMapper();
-    private final Client client = new Client();
-
-    public JsonNode postRequest(String url, Object map)
-            throws JsonProcessingException, UniformInterfaceException, ClientHandlerException {
-        WebResource webResource = client.resource(url);
+    public JsonNode deleteRequest(String bodyUrl,String request) throws JsonProcessingException, UniformInterfaceException, ClientHandlerException {
+        WebResource webResource = client.resource(bodyUrl);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, objectMapper.writeValueAsString(map));
-
-        String responds = response.getEntity(String.class);
-        return objectMapper.readValue(responds, JsonNode.class);
-    }
-
-    public JsonNode postRequest(String url) throws JsonMappingException, JsonProcessingException {
-        WebResource webResource = client.resource(url);
-        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class);
+                .post(ClientResponse.class, request);
 
         String responds = response.getEntity(String.class);
         return objectMapper.readValue(responds, JsonNode.class);
