@@ -1,7 +1,6 @@
 package com.ryo.elrys.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,8 +39,8 @@ public class RequestApi {
         return client.deleteRequest(bodyUrl);
     }
 
-    public JsonNode delete(String bodyUrl, String request) throws JsonProcessingException {
-        return client.deleteRequest(bodyUrl, request);
+    public void delete(String bodyUrl, String request) throws JsonProcessingException {
+        client.deleteRequest(bodyUrl, request);
     }
 
 }
@@ -101,6 +100,15 @@ class ApiClient {
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
+
+    /**
+     * Melakukan pencarian data dengan mengirim Request HTTP POST
+     * dengan data JsonString dan mengembalikan hasilnya sebagai JsonNode.
+     *
+     * @param bodyUrl URL tujuan Request
+     * @param request Objek yang akan dikirim sebagai payload JSON
+     * @return JsonNode response dari Request
+     */
     public JsonNode findRequest(String bodyUrl, String request) throws JsonProcessingException {
         WebResource webResource = client.resource(bodyUrl);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
@@ -110,6 +118,14 @@ class ApiClient {
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
+
+    /**
+     * Menghapus Data dengan Mengirim Request HTTP DELETE
+     * tanpa payload dan mengembalikan hasilnya sebagai JSON.
+     *
+     * @param bodyUrl URL tujuan Request
+     * @return JsonNode response dari Request
+     */
     public JsonNode deleteRequest(String bodyUrl) throws JsonProcessingException, UniformInterfaceException, ClientHandlerException {
         WebResource webResource = client.resource(bodyUrl);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
@@ -119,12 +135,20 @@ class ApiClient {
         return objectMapper.readValue(responds, JsonNode.class);
     }
 
-    public JsonNode deleteRequest(String bodyUrl,String request) throws JsonProcessingException, UniformInterfaceException, ClientHandlerException {
+    /**
+     * Overloading
+     * Menghapus Data dengan Mengirim Request HTTP DELETE
+     * tanpa payload dan mengembalikan hasilnya sebagai JSON.
+     *
+     * @param bodyUrl URL tujuan Request
+     * @param request Objek yang akan dikirim sebagai payload JSON
+     */
+    public void deleteRequest(String bodyUrl, String request) throws JsonProcessingException, UniformInterfaceException, ClientHandlerException {
         WebResource webResource = client.resource(bodyUrl);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, request);
 
         String responds = response.getEntity(String.class);
-        return objectMapper.readValue(responds, JsonNode.class);
+        objectMapper.readValue(responds, JsonNode.class);
     }
 }
