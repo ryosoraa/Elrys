@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.elrys.api.RequestApi;
 import com.ryo.elrys.model.DTO.AccountsDTO;
 import com.ryo.elrys.model.DTO.UserDTO;
-import com.ryo.elrys.model.MAP.LoginMap;
+import com.ryo.elrys.model.DTO.LoginDTO;
 import com.ryo.elrys.utils.Equipment;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class AccountsRepository {
         }
 
         JsonNode jsonNode = requestApi.login(loginUrl,
-                mapper.convertValue(new LoginMap(accountsDTO, idEncode), Map.class));
+                mapper.convertValue(new LoginDTO(accountsDTO, idEncode), Map.class));
         System.out.println(jsonNode);
 
         return responds;
