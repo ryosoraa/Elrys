@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.LoginDTO;
-import com.ryo.elrys.model.DTO.RegisterDTO;
+import com.ryo.elrys.model.DTO.UpdateDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,6 +43,10 @@ public class DataResponse {
 
     public DataResponse(AccountsDTO accountsDTO) {
         this.email = accountsDTO.getEmail();
+    }
+
+    public DataResponse(UpdateDTO updateDTO) {
+        this.email = updateDTO.getEmail();
     }
 
     public DataResponse(JsonNode jsonNode) {

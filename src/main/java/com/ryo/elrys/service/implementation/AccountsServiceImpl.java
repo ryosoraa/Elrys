@@ -3,9 +3,7 @@ package com.ryo.elrys.service.implementation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.DeleteDTO;
-import com.ryo.elrys.model.DTO.LoginDTO;
-import com.ryo.elrys.model.DTO.RegisterDTO;
+import com.ryo.elrys.model.DTO.UpdateDTO;
 import com.ryo.elrys.repository.AccountsRepository;
 import com.ryo.elrys.response.BodyResponse;
 import com.ryo.elrys.response.DataResponse;
@@ -39,8 +37,8 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     @Override
-    public BodyResponse<Object> login(LoginDTO loginDTO) throws JsonProcessingException {
-        Object loginResponse = accountsRepository.login(loginDTO);
+    public BodyResponse<Object> login(AccountsDTO accountsDTO) throws JsonProcessingException {
+        Object loginResponse = accountsRepository.login(accountsDTO);
 
         if (loginResponse.equals("User not found")) {
             return BodyResponse.builder()
@@ -74,8 +72,8 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     @Override
-    public BodyResponse<Object> update(RegisterDTO registerDTO) throws Exception {
-        Object findResponse = accountsRepository.update(registerDTO);
+    public BodyResponse<Object> update(UpdateDTO updateDTO) throws Exception {
+        Object findResponse = accountsRepository.update(updateDTO);
         if (findResponse.equals("Accounts not found")) {
             return BodyResponse.builder()
                     .status("Failed")
@@ -90,8 +88,8 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     @Override
-    public BodyResponse<Object> delete(DeleteDTO deleteDTO) throws Exception {
-        Object findResponse = accountsRepository.delete(deleteDTO);
+    public BodyResponse<Object> delete(AccountsDTO accountsDTO) throws Exception {
+        Object findResponse = accountsRepository.delete(accountsDTO);
         if (findResponse.equals("Accounts not found")) {
             return BodyResponse.builder()
                     .status("Failed")

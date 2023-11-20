@@ -1,6 +1,6 @@
 package com.ryo.elrys.configuration;
 
-import com.ryo.elrys.elastic.Api;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.elrys.utils.Equipment;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +9,13 @@ import org.springframework.context.annotation.Configuration;
 public class ElasticConfiguration {
 
     @Bean
-    public Api api(){return new Api();}
+    public Equipment equipment() {
+        return new Equipment();
+    }
 
     @Bean
-    public Equipment equipment(){return new Equipment();}
+    public ObjectMapper mapper() {
+        return new ObjectMapper();
+    }
 
 }

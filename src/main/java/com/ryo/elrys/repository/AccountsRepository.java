@@ -2,19 +2,18 @@ package com.ryo.elrys.repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.elrys.api.RequestApi;
 import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.DeleteDTO;
-import com.ryo.elrys.model.DTO.LoginDTO;
-import com.ryo.elrys.model.DTO.RegisterDTO;
+import com.ryo.elrys.model.DTO.UpdateDTO;
 import com.ryo.elrys.model.MAP.LoginMap;
-import com.ryo.elrys.model.MAP.RegisterMAP;
 import com.ryo.elrys.security.BCrypt;
 import com.ryo.elrys.utils.Equipment;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
+import java.util.Map;
 import java.util.Random;
 
 @Repository
@@ -28,26 +27,28 @@ public class AccountsRepository {
     // REGISTER
     public Object register(AccountsDTO accountsDTO) throws JsonProcessingException {
         String idEncode = equipment.idEncoder(accountsDTO);
-        String bodyUrl = "http://192.168.43.9:9200/elrys/_doc/".concat(idEncode);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+        ObjectMapper mapper = new ObjectMapper();
+
+        System.out.println(requestApi.findById(bodyUrl).toPrettyString());
+        System.out.println(requestApi.findById(bodyUrl).get("found").asBoolean());
 
         if (requestApi.findById(bodyUrl).get("found").asBoolean()) {
             return "Customer already exists";
         }
 
-        return requestApi.register(bodyUrl, new RegisterMAP(accountsDTO).user());
-        /*
-         * RegisterMAP registerMAP = new RegisterMAP(accountsDTO);
-         * return requestApi.register(bodyUrl, registerMAP.register());
-         */
+        return requestApi.register(bodyUrl, mapper.convertValue(new UpdateDTO(accountsDTO), Map.class));
     }
 
     // LOGIN
-    public Object login(LoginDTO loginDTO) throws JsonProcessingException {
+    public Object login(AccountsDTO accountsDTO) throws JsonProcessingException {
         Random random = new Random();
-        String idEncode = equipment.idEncoder(loginDTO);
+        ObjectMapper mapper = new ObjectMapper();
 
-        String bodyUrl = "http://192.168.43.9:9200/elrys/_doc/".concat(idEncode);
-        String loginUrl = "http://192.168.43.9:9200/elrys_log/_doc/".concat(String.valueOf(random.nextLong()));
+        String idEncode = equipment.idEncoder(accountsDTO);
+
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+        String loginUrl = "http://192.168.20.90:9200/elrys_log/_doc/".concat(String.valueOf(random.nextLong()));
 
         JsonNode responds = requestApi.findById(bodyUrl);
 
@@ -55,14 +56,9 @@ public class AccountsRepository {
             return "User not found";
         }
 
-        JsonNode jsonNode = requestApi.login(loginUrl, new LoginMap(
-                loginDTO, /* Parameter 1 untuk mengambil assets dari loginDTO */
-                idEncode, /* Parameter 2 Untuk set Accounts_id Reference */
-                String.valueOf(responds.at("/_source/username").asText())).login());
-        /*
-         * Parameter 3 untuk set username, mengambil dari respond requestAPi karena si
-         * loginDTO tidak ada field username
-         */
+        JsonNode jsonNode = requestApi.login(loginUrl,
+                mapper.convertValue(new LoginMap(accountsDTO, idEncode), Map.class));
+        System.out.println(jsonNode);
 
         return responds;
 
@@ -70,7 +66,7 @@ public class AccountsRepository {
 
     // Find By Email
     public Object findByEmail(String email) throws JsonProcessingException {
-        String bodyUrl = "http://192.168.43.9:9200/elrys/_search";
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_search";
         String bodyRequest = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
 
         JsonNode jsonNode = requestApi.findByEmail(bodyUrl, bodyRequest);
@@ -83,22 +79,24 @@ public class AccountsRepository {
     }
 
     // Update
-    public Object update(RegisterDTO registerDTO) throws JsonProcessingException {
-        String idEncode = equipment.idEncoder(registerDTO);
-        String bodyUrl = "http://192.168.43.9:9200/elrys/_doc/".concat(idEncode);
+    public Object update(UpdateDTO updateDTO) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String idEncode = equipment.idEncoder(updateDTO);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
 
         if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
             return "Accounts not found";
         }
 
-        return requestApi.register(bodyUrl, new RegisterMAP(registerDTO).user());
+        System.out.println("masuk repo");
+        return requestApi.register(bodyUrl, mapper.convertValue(updateDTO, Map.class));
 
     }
 
     // Delete
-    public Object delete(DeleteDTO deleteDTO) throws JsonProcessingException {
-        String idEncode = equipment.idEncoder(deleteDTO);
-        String bodyUrl = "http://192.168.43.9:9200/elrys/_doc/".concat(idEncode);
+    public Object delete(AccountsDTO accountsDTO) throws JsonProcessingException {
+        String idEncode = equipment.idEncoder(accountsDTO);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
 
         if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
             return "Accounts not found";
