@@ -29,9 +29,6 @@ public class AccountsRepository {
         String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
         ObjectMapper mapper = new ObjectMapper();
 
-        System.out.println(requestApi.findById(bodyUrl).toPrettyString());
-        System.out.println(requestApi.findById(bodyUrl).get("found").asBoolean());
-
         if (requestApi.findById(bodyUrl).get("found").asBoolean()) {
             return "Customer already exists";
         }
@@ -43,7 +40,6 @@ public class AccountsRepository {
     public Object login(AccountsDTO accountsDTO) throws JsonProcessingException {
         Random random = new Random();
         ObjectMapper mapper = new ObjectMapper();
-
         String idEncode = equipment.idEncoder(accountsDTO);
 
         String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);

@@ -42,10 +42,6 @@ public class DataResponse {
         this.email = accountsDTO.getEmail();
     }
 
-    public DataResponse(UserDTO userDTO) {
-        this.email = userDTO.getEmail();
-    }
-
     public DataResponse(JsonNode jsonNode) {
         this.email = String.valueOf(jsonNode.at("/_source/email").asText());
         this.timesTamp = String.valueOf(new Timestamp(System.currentTimeMillis()));

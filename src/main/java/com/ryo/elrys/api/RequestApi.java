@@ -17,7 +17,6 @@ public class RequestApi {
 
     // FIND BY ID
     public JsonNode findById(String bodyUrl) throws JsonProcessingException {
-//        System.out.println( client.postRequest(bodyUrl).toPrettyString());
         return client.getRequest(bodyUrl);
     }
 
@@ -31,14 +30,17 @@ public class RequestApi {
         return client.postRequest(bodyUrl, request);
     }
 
+    // FIND BY EMAIL
     public JsonNode findByEmail(String bodyUrl, String request) throws JsonProcessingException {
         return client.findRequest(bodyUrl, request);
-}
+    }
 
+    // DELETE
     public JsonNode delete(String bodyUrl) throws JsonProcessingException {
         return client.deleteRequest(bodyUrl);
     }
 
+    // DELETE OVERLOADING
     public void delete(String bodyUrl, String request) throws JsonProcessingException {
         client.deleteRequest(bodyUrl, request);
     }
@@ -63,22 +65,6 @@ class ApiClient {
         WebResource webResource = client.resource(bodyUrl);
         ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, objectMapper.writeValueAsString(request));
-
-        String responds = response.getEntity(String.class);
-        return objectMapper.readValue(responds, JsonNode.class);
-    }
-
-
-    /**
-     * Mengirim Request HTTP POST tanpa payload dan mengembalikan hasilnya sebagai JSON.
-     *
-     * @param bodyUrl URL tujuan Request
-     * @return JsonNode response dari Request
-     */
-    public JsonNode postRequest(String bodyUrl) throws JsonProcessingException {
-        WebResource webResource = client.resource(bodyUrl);
-        ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class);
 
         String responds = response.getEntity(String.class);
         return objectMapper.readValue(responds, JsonNode.class);
