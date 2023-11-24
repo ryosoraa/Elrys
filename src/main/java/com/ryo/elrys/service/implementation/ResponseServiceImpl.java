@@ -23,7 +23,6 @@ public class ResponseServiceImpl implements ResponseService {
         if (response.equals("Customer already exists")) {
             return BodyResponse.builder()
                     .status("Failed")
-                    .data(null)
                     .message("Customer already exist")
                     .build();
         }

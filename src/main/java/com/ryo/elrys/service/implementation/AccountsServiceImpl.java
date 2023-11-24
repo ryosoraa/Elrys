@@ -2,6 +2,7 @@ package com.ryo.elrys.service.implementation;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ryo.elrys.enums.BodyUrl;
 import com.ryo.elrys.enums.Options;
 import com.ryo.elrys.model.AccountsModel;
 import com.ryo.elrys.model.DataModel;
@@ -24,12 +25,13 @@ public class AccountsServiceImpl implements AccountsService {
     @Autowired
     RequestApiImpl requestApi;
 
+    @Autowired
+    ObjectMapper mapper;
+
     // REGISTER
     @Override
     public Object register(AccountsModel accountsModel) throws Exception {
-        String idEncode = equipment.idEncoder(accountsModel);
-        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
-        ObjectMapper mapper = new ObjectMapper();
+        String bodyUrl = BodyUrl.MAIN_DOC.getUrl().concat(equipment.idEncoder(accountsModel));
 
         if (requestApi.findById(bodyUrl).get("found").asBoolean()) {
             return "Customer already exists";
@@ -42,20 +44,18 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public Object login(AccountsModel accountsModel) throws Exception {
         Random random = new Random();
-        ObjectMapper mapper = new ObjectMapper();
         String idEncode = equipment.idEncoder(accountsModel);
 
-        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
-        String loginUrl = "http://192.168.20.90:9200/elrys_log/_doc/".concat(String.valueOf(random.nextLong()));
-
-        JsonNode responds = requestApi.findById(bodyUrl);
+        JsonNode responds = requestApi.findById(BodyUrl.MAIN_DOC.getUrl().concat(idEncode));
 
         if (!responds.get("found").asBoolean()) {
             return "User not found";
         }
 
-        JsonNode jsonNode = requestApi.login(loginUrl,
-                mapper.writeValueAsString(new LoginModel(accountsModel, idEncode)));
+        JsonNode jsonNode = requestApi.login(
+                BodyUrl.LOG_DOC.getUrl().concat(String.valueOf(random.nextLong())),
+                mapper.writeValueAsString(new LoginModel(accountsModel, idEncode))
+        );
 
         return responds;
 
@@ -64,12 +64,10 @@ public class AccountsServiceImpl implements AccountsService {
     // Find By Email
     @Override
     public Object findByEmail(String email) throws Exception {
-        String bodyUrl = "http://192.168.20.90:9200/elrys/_search";
-        String bodyRequest = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
 
-        JsonNode jsonNode = requestApi.findByEmail(bodyUrl, bodyRequest);
-        System.out.println(jsonNode.toPrettyString());
+        String request = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
 
+        JsonNode jsonNode = requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request);
         if (!String.valueOf(jsonNode.at("/hits/hits/0/_source/email").asText()).equals(email)) {
             return "not found";
         }
@@ -80,15 +78,12 @@ public class AccountsServiceImpl implements AccountsService {
     // Update
     @Override
     public Object update(DataModel dataModel) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        String idEncode = equipment.idEncoder(dataModel);
-        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+        String bodyUrl = BodyUrl.MAIN_DOC.getUrl().concat(equipment.idEncoder(dataModel));
 
         if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
             return "Accounts not found";
         }
 
-        System.out.println("masuk repo");
         return requestApi.register(bodyUrl, mapper.writeValueAsString(dataModel));
 
     }
@@ -97,14 +92,14 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public Object delete(AccountsModel accountsModel) throws Exception {
         String idEncode = equipment.idEncoder(accountsModel);
-        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
-        String bodyUrl2 = "http://192.168.20.90:9200/elrys_log/_delete_by_query";
+        String bodyUrl = BodyUrl.MAIN_SEARCH.getUrl().concat(idEncode);
+
         String request = String.format("{\"query\": {\"term\": {\"id.keyword\": \"%s\"}}}", idEncode);
 
-        if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
+        if (!requestApi.findById(BodyUrl.MAIN_DOC.getUrl().concat(idEncode)).get("found").asBoolean()) {
             return "Accounts not found";
         }
-        requestApi.delete(bodyUrl2, request);
+        requestApi.delete(BodyUrl.LOG_DELETE_QUERY.getUrl(), request);
         return requestApi.delete(bodyUrl, Options.WITHOUT_REQUEST.getOptions());
     }
 
