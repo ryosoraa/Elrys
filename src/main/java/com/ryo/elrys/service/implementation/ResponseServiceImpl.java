@@ -75,7 +75,7 @@ public class ResponseServiceImpl implements ResponseService {
         if (findResponse.equals("Accounts not found")) {
             return BodyResponse.builder()
                     .status("Failed")
-                    .message("Accounts nof found")
+                    .message("Accounts not found")
                     .build();
         }
         return BodyResponse.builder()

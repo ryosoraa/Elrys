@@ -4,15 +4,27 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ryo.elrys.utils.Equipment;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Data
+@ApiModel(description = "DataModel")
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataModel {
+
+    @Nullable
+    @ApiModelProperty(hidden = true)
+    private String uuid;
 
     @Nullable
     @Schema(name = "email", defaultValue = "ryo@gmail.com")
@@ -41,8 +53,10 @@ public class DataModel {
     private AdditionalInfo additional_info;
 
     public DataModel(AccountsModel accountsModel) {
+        Equipment equipment = new Equipment();
         this.email = accountsModel.getEmail();
         this.password = accountsModel.getPassword();
+        this.uuid = equipment.idEncoder(accountsModel);
     }
 
 }

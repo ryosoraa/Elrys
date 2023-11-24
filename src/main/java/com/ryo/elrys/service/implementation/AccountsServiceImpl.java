@@ -32,11 +32,13 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public Object register(AccountsModel accountsModel) throws Exception {
         String bodyUrl = BodyUrl.MAIN_DOC.getUrl().concat(equipment.idEncoder(accountsModel));
+        String request = String.format("{\"query\": {\"bool\": {\"must\": [{\"term\": {\"email.keyword\": {\"value\": \"%s\"}}}]}}}", accountsModel.getEmail());
 
-        if (requestApi.findById(bodyUrl).get("found").asBoolean()) {
+        if(requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request).at("/hits/total/value").toString().equals("1")){
             return "Customer already exists";
         }
 
+        System.out.println(requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request).toPrettyString());
         return requestApi.register(bodyUrl, mapper.writeValueAsString(new DataModel(accountsModel)));
     }
 
@@ -54,7 +56,7 @@ public class AccountsServiceImpl implements AccountsService {
 
         JsonNode jsonNode = requestApi.login(
                 BodyUrl.LOG_DOC.getUrl().concat(String.valueOf(random.nextLong())),
-                mapper.writeValueAsString(new LoginModel(accountsModel, idEncode))
+                mapper.writeValueAsString(new LoginModel(accountsModel, responds.at("/_source/uuid").asText()))
         );
 
         return responds;
@@ -78,13 +80,16 @@ public class AccountsServiceImpl implements AccountsService {
     // Update
     @Override
     public Object update(DataModel dataModel) throws Exception {
-        String bodyUrl = BodyUrl.MAIN_DOC.getUrl().concat(equipment.idEncoder(dataModel));
 
-        if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
+        String request = String.format("{\"query\": {\"bool\": {\"must\": [{\"term\": {\"email.keyword\": {\"value\": \"%s\"}}}]}}}", dataModel.getEmail());
+        JsonNode response = requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request);
+
+        if(!requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request).at("/hits/total/value").toString().equals("1")){
             return "Accounts not found";
         }
+        dataModel.setUuid(response.at("/hits/hits/0/_source/uuid").asText());
 
-        return requestApi.register(bodyUrl, mapper.writeValueAsString(dataModel));
+        return requestApi.register(BodyUrl.MAIN_DOC.getUrl().concat(String.valueOf(dataModel.getUuid())), mapper.writeValueAsString(dataModel));
 
     }
 

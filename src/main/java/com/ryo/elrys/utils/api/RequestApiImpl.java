@@ -111,4 +111,10 @@ class JerseyApiClientImpl implements RequestApi.JerseyApiClient {
         String responds = response.getEntity(String.class);
         return mapper.readValue(responds, JsonNode.class);
     }
+
+    @Override
+    public Boolean existRequest(String bodyUrl, String request) throws Exception {
+
+        return null;
+    }
 }

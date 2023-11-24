@@ -14,5 +14,6 @@ public interface RequestApi {
 
         JsonNode getRequest(String bodyUrl) throws Exception;
         JsonNode deleteRequest(String bodyUrl, String request) throws Exception;
+        Boolean existRequest(String bodyUrl, String request) throws Exception;
     }
 }
