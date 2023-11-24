@@ -38,9 +38,9 @@ public class Accounts {
                 .body(response);
     }
 
-    @GetMapping("/findByEmail")
-    public ResponseEntity<BodyResponse<Object>> findByEmail(@RequestParam String email) throws Exception {
-        BodyResponse<Object> response = responseService.findByEmail(email);
+    @GetMapping("/getInfo")
+    public ResponseEntity<BodyResponse<Object>> getInfo(@RequestParam String email) throws Exception {
+        BodyResponse<Object> response = responseService.getInfo(email);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);
@@ -64,6 +64,18 @@ public class Accounts {
 
     @DeleteMapping("/delete")
     public ResponseEntity<BodyResponse<Object>> delete(@RequestBody AccountsModel accountsModel) throws Exception {
+        BodyResponse<Object> response = responseService.delete(accountsModel);
+        if (response.getStatus().equals("Success")){
+            return ResponseEntity.ok()
+                    .body(response);
+        }
+        return ResponseEntity.status(404)
+                .body(response);
+
+    }
+
+    @DeleteMapping("/pass")
+    public ResponseEntity<BodyResponse<Object>> changePass(@RequestBody AccountsModel accountsModel) throws Exception {
         BodyResponse<Object> response = responseService.delete(accountsModel);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()

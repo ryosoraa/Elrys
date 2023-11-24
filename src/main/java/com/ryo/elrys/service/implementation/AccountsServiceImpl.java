@@ -14,8 +14,6 @@ import com.ryo.elrys.utils.api.RequestApiImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Random;
-
 @Repository
 public class AccountsServiceImpl implements AccountsService {
 
@@ -82,16 +80,26 @@ public class AccountsServiceImpl implements AccountsService {
 
     // Find By Email
     @Override
-    public Object findByEmail(String email) throws Exception {
+    public Object getInfo(String email) throws Exception {
 
-        String request = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
+        String request = String.format("""
+                {
+                  "query": {
+                    "wildcard": {
+                      "email.keyword": {
+                        "value": "%s"
+                      }
+                    }
+                  }
+                }
+                """, email);
 
-        JsonNode jsonNode = requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request);
-        if (!String.valueOf(jsonNode.at("/hits/hits/0/_source/email").asText()).equals(email)) {
+        JsonNode response = requestApi.getInfo(BodyUrl.MAIN_SEARCH.getUrl(), request);
+        if (!String.valueOf(response.at("/hits/hits/0/_source/email").asText()).equals(email)) {
             return "not found";
         }
 
-        return jsonNode;
+        return response;
     }
 
     // Update
@@ -122,7 +130,7 @@ public class AccountsServiceImpl implements AccountsService {
                         """, dataModel.getEmail(), dataModel.getPassword());
 
 
-        JsonNode response = requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request);
+        JsonNode response = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), request);
 
         System.out.println(response.at("/hits/hits/0/_id").asText());
         if(!String.valueOf(response.at("/hits/total/value")).equals("1")){
@@ -136,31 +144,88 @@ public class AccountsServiceImpl implements AccountsService {
     // Delete
     @Override
     public Object delete(AccountsModel accountsModel) throws Exception {
-        String idEncode = equipment.idEncoder(accountsModel);
-        String bodyUrl = BodyUrl.MAIN_SEARCH.getUrl().concat(idEncode);
+        String mainRequest = String.format("""
+                        {
+                          "query": {
+                            "bool": {
+                              "must": [
+                                {"term": {
+                                  "email.keyword": {
+                                    "value": "%s"
+                                  }
+                                }},
+                                {
+                                  "term": {
+                                    "password.keyword": {
+                                      "value": "%s"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                        """, accountsModel.getEmail(), accountsModel.getPassword());
 
-        String request = String.format("{\"query\": {\"term\": {\"id.keyword\": \"%s\"}}}", idEncode);
+        String logRequest = String.format("""
+                {
+                  "query":{
+                    "term":{
+                      "email.keyword":"%s"
+                    }
+                  }
+                }
+                """, accountsModel.getEmail());
 
-        if (!requestApi.findById(BodyUrl.MAIN_DOC.getUrl().concat(idEncode)).get("found").asBoolean()) {
-            return "Accounts not found";
+        JsonNode response = requestApi.delete(BodyUrl.MAIN_DELETE_QUERY.getUrl(), mainRequest);
+        System.out.println(response.toPrettyString());
+
+        if(String.valueOf(response.at("/deleted")).equals("0")){
+            System.out.println("User Not Found");
+            return "User Not Found";
         }
-        requestApi.delete(BodyUrl.LOG_DELETE_QUERY.getUrl(), request);
-        return requestApi.delete(bodyUrl, Options.WITHOUT_REQUEST.getOptions());
+        return requestApi.delete(BodyUrl.LOG_DELETE_QUERY.getUrl(), logRequest);
     }
 
+
     @Override
-    public Object changePassword(String email, String oldPassword, String newPassowrd) throws Exception {
+    public Object changePassword(String email, String oldPassword, String newPassword) throws Exception {
 
-//        String request = String.format("{\"query\": {\"bool\": {\"must\": [{\"term\": {\"email.keyword\": {\"value\": \"%s\"}}}]}}}", dataModel.getEmail());
-//        JsonNode response = requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request);
+        String request = String.format("""
+                {
+                  "query": {
+                    "bool": {
+                      "must": [
+                        {
+                          "term": {
+                            "email.keyword": {
+                              "value": "%s"
+                            }
+                          }
+                        },
+                        {
+                          "term": {
+                            "password.keyword": {
+                              "value": "%s"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "script": {
+                    "source": "ctx._source.password = params.newPassword",
+                    "lang": "painless",
+                    "params": {
+                      "newPassword": "%s"
+                    }
+                  }
+                }
+                """, email, oldPassword, newPassword);
 
-//        if(!requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request).at("/hits/total/value").toString().equals("1")){
-//            return "Accounts not found";
-//        }
-
-//        return requestApi.register(BodyUrl.MAIN_DOC.getUrl().concat(response.at("/hits/hits/0/_source/uuid").asText()), mapper.writeValueAsString(dataModel));
-
-    return null;
+        JsonNode response = requestApi.changePassword(BodyUrl.MAIN_UPDATE_QUERY.getUrl(), request);
+        System.out.println(response.toPrettyString());
+        return null;
     }
 
 }

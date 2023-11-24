@@ -32,7 +32,7 @@ public class RequestApiImpl implements RequestApi {
     }
 
     @Override
-    public JsonNode findByEmail(String bodyUrl, String request) throws Exception {
+    public JsonNode getInfo(String bodyUrl, String request) throws Exception {
         return client.postRequest(bodyUrl, request);
     }
 
@@ -48,6 +48,11 @@ public class RequestApiImpl implements RequestApi {
 
     @Override
     public JsonNode update(String bodyUrl, String request) throws Exception {
+        return client.postRequest(bodyUrl, request);
+    }
+
+    @Override
+    public JsonNode changePassword(String bodyUrl, String request) throws Exception {
         return client.postRequest(bodyUrl, request);
     }
 

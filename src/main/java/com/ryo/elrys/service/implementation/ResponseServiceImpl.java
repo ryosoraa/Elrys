@@ -53,8 +53,8 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public BodyResponse<Object> findByEmail(String email) throws Exception {
-        Object findResponse = accountsService.findByEmail(email);
+    public BodyResponse<Object> getInfo(String email) throws Exception {
+        Object findResponse = accountsService.getInfo(email);
 
         if (findResponse.equals("not found")) {
             return BodyResponse.builder()
@@ -88,14 +88,15 @@ public class ResponseServiceImpl implements ResponseService {
     @Override
     public BodyResponse<Object> delete(AccountsModel accountsModel) throws Exception {
         Object findResponse = accountsService.delete(accountsModel);
-        if (findResponse.equals("Accounts not found")) {
+        if (findResponse.equals("User Not Found")) {
             return BodyResponse.builder()
                     .status("Failed")
-                    .message("Accounts nof found")
+                    .message("User Not Found")
                     .build();
         }
         return BodyResponse.builder()
                 .status("Success")
+                .data(findResponse)
                 .message("Delete Success")
                 .build();
     }
