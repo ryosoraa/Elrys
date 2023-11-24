@@ -1,8 +1,5 @@
-package com.ryo.elrys.response;
+package com.ryo.elrys.payload;
 
-import java.util.HashMap;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

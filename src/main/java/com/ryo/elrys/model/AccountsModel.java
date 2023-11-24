@@ -1,10 +1,10 @@
-package com.ryo.elrys.model.DTO;
+package com.ryo.elrys.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class AccountsDTO {
+public class AccountsModel {
 
     @Schema(name = "email", defaultValue = "ryo@gmail.com")
     private String email;

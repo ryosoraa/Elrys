@@ -1,11 +1,10 @@
-package com.ryo.elrys.response;
+package com.ryo.elrys.payload;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.UserDTO;
+import com.ryo.elrys.model.AccountsModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,8 +37,8 @@ public class DataResponse {
 
     }
 
-    public DataResponse(AccountsDTO accountsDTO) {
-        this.email = accountsDTO.getEmail();
+    public DataResponse(AccountsModel accountsModel) {
+        this.email = accountsModel.getEmail();
     }
 
     public DataResponse(JsonNode jsonNode) {

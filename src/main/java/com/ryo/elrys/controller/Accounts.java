@@ -1,9 +1,9 @@
 package com.ryo.elrys.controller;
 
-import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.UserDTO;
-import com.ryo.elrys.response.BodyResponse;
-import com.ryo.elrys.service.interfaces.AccountsService;
+import com.ryo.elrys.model.AccountsModel;
+import com.ryo.elrys.model.DataModel;
+import com.ryo.elrys.payload.BodyResponse;
+import com.ryo.elrys.service.interfaces.ResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class Accounts {
 
     @Autowired
-    AccountsService accountsService;
+    ResponseService responseService;
 
     @PostMapping("/register")
-    public ResponseEntity<BodyResponse<Object>> register(@RequestBody AccountsDTO accountsDTO) throws Exception {
-        BodyResponse<Object> response = accountsService.register(accountsDTO);
+    public ResponseEntity<BodyResponse<Object>> register(@RequestBody AccountsModel accountsModel) throws Exception {
+        BodyResponse<Object> response = responseService.register(accountsModel);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);
@@ -28,8 +28,8 @@ public class Accounts {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<BodyResponse<Object>> login(@RequestBody AccountsDTO accountsDTO) throws Exception {
-        BodyResponse<Object> response = accountsService.login(accountsDTO);
+    public ResponseEntity<BodyResponse<Object>> login(@RequestBody AccountsModel accountsModel) throws Exception {
+        BodyResponse<Object> response = responseService.login(accountsModel);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);
@@ -40,7 +40,7 @@ public class Accounts {
 
     @GetMapping("/findByEmail")
     public ResponseEntity<BodyResponse<Object>> findByEmail(@RequestParam String email) throws Exception {
-        BodyResponse<Object> response = accountsService.findByEmail(email);
+        BodyResponse<Object> response = responseService.findByEmail(email);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);
@@ -51,8 +51,8 @@ public class Accounts {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<BodyResponse<Object>> update(@RequestBody UserDTO userDTO) throws Exception {
-        BodyResponse<Object> response = accountsService.update(userDTO);
+    public ResponseEntity<BodyResponse<Object>> update(@RequestBody DataModel dataModel) throws Exception {
+        BodyResponse<Object> response = responseService.update(dataModel);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);
@@ -63,8 +63,8 @@ public class Accounts {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<BodyResponse<Object>> delete(@RequestBody AccountsDTO accountsDTO) throws Exception {
-        BodyResponse<Object> response = accountsService.delete(accountsDTO);
+    public ResponseEntity<BodyResponse<Object>> delete(@RequestBody AccountsModel accountsModel) throws Exception {
+        BodyResponse<Object> response = responseService.delete(accountsModel);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);

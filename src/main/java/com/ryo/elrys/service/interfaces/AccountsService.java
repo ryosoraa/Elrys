@@ -1,19 +1,12 @@
 package com.ryo.elrys.service.interfaces;
 
-import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.UserDTO;
-import com.ryo.elrys.response.BodyResponse;
+import com.ryo.elrys.model.AccountsModel;
+import com.ryo.elrys.model.DataModel;
 
 public interface AccountsService {
-
-    BodyResponse<Object> register(AccountsDTO accountsDTO) throws Exception;
-
-    BodyResponse<Object> login(AccountsDTO accountsDTO) throws Exception;
-
-    BodyResponse<Object> findByEmail(String email) throws Exception;
-
-    BodyResponse<Object> update(UserDTO userDTO) throws Exception;
-
-    BodyResponse<Object> delete(AccountsDTO accountsDTO) throws Exception;
-
+    Object register(AccountsModel accountsModel) throws Exception;
+    Object login(AccountsModel accountsModel) throws Exception;
+    Object findByEmail(String email) throws Exception;
+    Object update(DataModel dataModel) throws Exception;
+    Object delete(AccountsModel accountsModel) throws Exception;
 }

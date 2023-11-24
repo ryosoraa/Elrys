@@ -1,4 +1,4 @@
-package com.ryo.elrys.model.DTO;
+package com.ryo.elrys.model;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class DataModel {
 
     @Nullable
     @Schema(name = "email", defaultValue = "ryo@gmail.com")
@@ -40,9 +40,9 @@ public class UserDTO {
     @Schema(name = "additional_info")
     private AdditionalInfo additional_info;
 
-    public UserDTO(AccountsDTO accountsDTO) {
-        this.email = accountsDTO.getEmail();
-        this.password = accountsDTO.getPassword();
+    public DataModel(AccountsModel accountsModel) {
+        this.email = accountsModel.getEmail();
+        this.password = accountsModel.getPassword();
     }
 
 }

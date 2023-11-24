@@ -1,105 +1,111 @@
 package com.ryo.elrys.service.implementation;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.ryo.elrys.model.DTO.AccountsDTO;
-import com.ryo.elrys.model.DTO.UserDTO;
-import com.ryo.elrys.repository.AccountsRepository;
-import com.ryo.elrys.response.BodyResponse;
-import com.ryo.elrys.response.DataResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ryo.elrys.enums.Options;
+import com.ryo.elrys.model.AccountsModel;
+import com.ryo.elrys.model.DataModel;
+import com.ryo.elrys.model.LoginModel;
 import com.ryo.elrys.service.interfaces.AccountsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.ryo.elrys.utils.Equipment;
 
-@Service
+import com.ryo.elrys.utils.api.RequestApiImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.Random;
+
+@Repository
 public class AccountsServiceImpl implements AccountsService {
 
     @Autowired
-    AccountsRepository accountsRepository;
+    Equipment equipment;
 
+    @Autowired
+    RequestApiImpl requestApi;
+
+    // REGISTER
     @Override
-    public BodyResponse<Object> register(AccountsDTO accountsDTO) throws JsonProcessingException {
-        Object response = accountsRepository.register(accountsDTO);
+    public Object register(AccountsModel accountsModel) throws Exception {
+        String idEncode = equipment.idEncoder(accountsModel);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+        ObjectMapper mapper = new ObjectMapper();
 
-        if (response.equals("Customer already exists")) {
-            return BodyResponse.builder()
-                    .status("Failed")
-                    .data(null)
-                    .message("Customer already exist")
-                    .build();
+        if (requestApi.findById(bodyUrl).get("found").asBoolean()) {
+            return "Customer already exists";
         }
 
-        return BodyResponse.builder()
-                .status("Success")
-                .data(new DataResponse(accountsDTO).registerResponse())
-                .message("Successful Registration")
-                .build();
+        return requestApi.register(bodyUrl, mapper.writeValueAsString(new DataModel(accountsModel)));
     }
 
+    // LOGIN
     @Override
-    public BodyResponse<Object> login(AccountsDTO accountsDTO) throws JsonProcessingException {
-        Object loginResponse = accountsRepository.login(accountsDTO);
+    public Object login(AccountsModel accountsModel) throws Exception {
+        Random random = new Random();
+        ObjectMapper mapper = new ObjectMapper();
+        String idEncode = equipment.idEncoder(accountsModel);
 
-        if (loginResponse.equals("User not found")) {
-            return BodyResponse.builder()
-                    .status("Failed")
-                    .message("User not found")
-                    .build();
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+        String loginUrl = "http://192.168.20.90:9200/elrys_log/_doc/".concat(String.valueOf(random.nextLong()));
+
+        JsonNode responds = requestApi.findById(bodyUrl);
+
+        if (!responds.get("found").asBoolean()) {
+            return "User not found";
         }
 
-        return BodyResponse.builder()
-                .status("Success")
-                .data(new DataResponse((JsonNode) loginResponse).loginResponse())
-                .message("Login successful")
-                .build();
+        JsonNode jsonNode = requestApi.login(loginUrl,
+                mapper.writeValueAsString(new LoginModel(accountsModel, idEncode)));
+
+        return responds;
+
     }
 
+    // Find By Email
     @Override
-    public BodyResponse<Object> findByEmail(String email) throws Exception {
-        Object findResponse = accountsRepository.findByEmail(email);
+    public Object findByEmail(String email) throws Exception {
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_search";
+        String bodyRequest = String.format("{\"query\": {\"wildcard\": {\"email.keyword\": \"%s\"}}}", email);
 
-        if (findResponse.equals("not found")) {
-            return BodyResponse.builder()
-                    .status("Failed")
-                    .message("Accounts not found")
-                    .build();
+        JsonNode jsonNode = requestApi.findByEmail(bodyUrl, bodyRequest);
+        System.out.println(jsonNode.toPrettyString());
+
+        if (!String.valueOf(jsonNode.at("/hits/hits/0/_source/email").asText()).equals(email)) {
+            return "not found";
         }
-        return BodyResponse.builder()
-                .status("Success")
-                .data(findResponse)
-                .message("Account in Discover")
-                .build();
+
+        return jsonNode;
     }
 
+    // Update
     @Override
-    public BodyResponse<Object> update(UserDTO userDTO) throws Exception {
-        Object findResponse = accountsRepository.update(userDTO);
-        if (findResponse.equals("Accounts not found")) {
-            return BodyResponse.builder()
-                    .status("Failed")
-                    .message("Accounts nof found")
-                    .build();
+    public Object update(DataModel dataModel) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        String idEncode = equipment.idEncoder(dataModel);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+
+        if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
+            return "Accounts not found";
         }
-        return BodyResponse.builder()
-                .status("Success")
-                .data(findResponse)
-                .message("Update Success")
-                .build();
+
+        System.out.println("masuk repo");
+        return requestApi.register(bodyUrl, mapper.writeValueAsString(dataModel));
+
     }
 
+    // Delete
     @Override
-    public BodyResponse<Object> delete(AccountsDTO accountsDTO) throws Exception {
-        Object findResponse = accountsRepository.delete(accountsDTO);
-        if (findResponse.equals("Accounts not found")) {
-            return BodyResponse.builder()
-                    .status("Failed")
-                    .message("Accounts nof found")
-                    .build();
+    public Object delete(AccountsModel accountsModel) throws Exception {
+        String idEncode = equipment.idEncoder(accountsModel);
+        String bodyUrl = "http://192.168.20.90:9200/elrys/_doc/".concat(idEncode);
+        String bodyUrl2 = "http://192.168.20.90:9200/elrys_log/_delete_by_query";
+        String request = String.format("{\"query\": {\"term\": {\"id.keyword\": \"%s\"}}}", idEncode);
+
+        if (!requestApi.findById(bodyUrl).get("found").asBoolean()) {
+            return "Accounts not found";
         }
-        return BodyResponse.builder()
-                .status("Success")
-                .message("Delete Success")
-                .build();
+        requestApi.delete(bodyUrl2, request);
+        return requestApi.delete(bodyUrl, Options.WITHOUT_REQUEST.getOptions());
     }
 
 }
