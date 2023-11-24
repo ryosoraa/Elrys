@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.elrys.enums.Options;
-import com.ryo.elrys.utils.api.RequestApi;
 import com.sun.jersey.api.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +43,11 @@ public class RequestApiImpl implements RequestApi {
 
     @Override
     public JsonNode findByRequest(String bodyUrl, String request) throws Exception {
+        return client.postRequest(bodyUrl, request);
+    }
+
+    @Override
+    public JsonNode update(String bodyUrl, String request) throws Exception {
         return client.postRequest(bodyUrl, request);
     }
 

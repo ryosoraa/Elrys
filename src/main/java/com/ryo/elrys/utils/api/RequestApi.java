@@ -10,6 +10,8 @@ public interface RequestApi {
     JsonNode delete(String bodyUrl, String request) throws Exception;
     JsonNode findByRequest(String bodyUrl, String request) throws Exception;
 
+    JsonNode update(String bodyUrl, String request) throws Exception;
+
     interface JerseyApiClient {
         JsonNode postRequest(String bodyUrl, String request) throws Exception;
 

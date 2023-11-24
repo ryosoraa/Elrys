@@ -68,7 +68,6 @@ public class AccountsServiceImpl implements AccountsService {
                         """, accountsModel.getEmail(), accountsModel.getPassword());
 
         JsonNode responds = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), request);
-        System.out.println(responds.toPrettyString());
 
         if(!String.valueOf(responds.at("/hits/total/value")).equals("1")){
             System.out.println("user not found");
@@ -99,16 +98,39 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public Object update(DataModel dataModel) throws Exception {
 
-        String request = String.format("{\"query\": {\"bool\": {\"must\": [{\"term\": {\"email.keyword\": {\"value\": \"%s\"}}}]}}}", dataModel.getEmail());
+        String request = String.format("""
+                        {
+                          "query": {
+                            "bool": {
+                              "must": [
+                                {"term": {
+                                  "email.keyword": {
+                                    "value": "%s"
+                                  }
+                                }},
+                                {
+                                  "term": {
+                                    "password.keyword": {
+                                      "value": "%s"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                        """, dataModel.getEmail(), dataModel.getPassword());
+
+
         JsonNode response = requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request);
 
-        if(!requestApi.findByEmail(BodyUrl.MAIN_SEARCH.getUrl(), request).at("/hits/total/value").toString().equals("1")){
-            return "Accounts not found";
+        System.out.println(response.at("/hits/hits/0/_id").asText());
+        if(!String.valueOf(response.at("/hits/total/value")).equals("1")){
+            System.out.println("user not found");
+            return "User not found";
         }
-//        dataModel.setUuid(response.at("/hits/hits/0/_source/uuid").asText());
 
-//        return requestApi.register(BodyUrl.MAIN_DOC.getUrl().concat(String.valueOf(dataModel.getUuid())), mapper.writeValueAsString(dataModel));
-    return null;
+        return requestApi.update(BodyUrl.MAIN_DOC.getUrl().concat(response.at("/hits/hits/0/_id").asText()), mapper.writeValueAsString(dataModel));
     }
 
     // Delete

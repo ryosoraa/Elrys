@@ -72,10 +72,10 @@ public class ResponseServiceImpl implements ResponseService {
     @Override
     public BodyResponse<Object> update(DataModel dataModel) throws Exception {
         Object findResponse = accountsService.update(dataModel);
-        if (findResponse.equals("Accounts not found")) {
+        if (findResponse.equals("User not found")) {
             return BodyResponse.builder()
                     .status("Failed")
-                    .message("Accounts not found")
+                    .message("User not found")
                     .build();
         }
         return BodyResponse.builder()
