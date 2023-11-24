@@ -44,8 +44,6 @@ public class AccountsServiceImpl implements AccountsService {
     // LOGIN
     @Override
     public Object login(AccountsModel accountsModel) throws Exception {
-        Random random = new Random();
-        String idEncode = equipment.idEncoder(accountsModel);
         String request = String.format("""
                         {
                           "query": {
@@ -72,14 +70,12 @@ public class AccountsServiceImpl implements AccountsService {
         JsonNode responds = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), request);
         System.out.println(responds.toPrettyString());
 
-        if (!responds.get("found").asBoolean()) {
+        if(!String.valueOf(responds.at("/hits/total/value")).equals("1")){
+            System.out.println("user not found");
             return "User not found";
         }
 
-        JsonNode jsonNode = requestApi.login(
-                BodyUrl.LOG_DOC.getUrl().concat(String.valueOf(random.nextLong())),
-                mapper.writeValueAsString(new LoginModel(accountsModel, responds.at("/_source/uuid").asText()))
-        );
+        requestApi.login(BodyUrl.LOG_DOC.getUrl(), mapper.writeValueAsString(new LoginModel(accountsModel)));
 
         return responds;
 
