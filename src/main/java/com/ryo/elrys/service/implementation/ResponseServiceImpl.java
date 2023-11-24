@@ -20,10 +20,10 @@ public class ResponseServiceImpl implements ResponseService {
     public BodyResponse<Object> register(AccountsModel accountsModel) throws Exception {
         Object response = accountsService.register(accountsModel);
 
-        if (response.equals("Customer already exists")) {
+        if (response.equals("Accounts already exists")) {
             return BodyResponse.builder()
                     .status("Failed")
-                    .message("Customer already exist")
+                    .message("Accounts already exist")
                     .build();
         }
 

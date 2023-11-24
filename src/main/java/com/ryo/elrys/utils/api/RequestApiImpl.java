@@ -42,6 +42,11 @@ public class RequestApiImpl implements RequestApi {
         return client.deleteRequest(bodyUrl, request);
     }
 
+    @Override
+    public JsonNode findByRequest(String bodyUrl, String request) throws Exception {
+        return client.postRequest(bodyUrl, request);
+    }
+
 
 }
 
@@ -112,9 +117,4 @@ class JerseyApiClientImpl implements RequestApi.JerseyApiClient {
         return mapper.readValue(responds, JsonNode.class);
     }
 
-    @Override
-    public Boolean existRequest(String bodyUrl, String request) throws Exception {
-
-        return null;
-    }
 }

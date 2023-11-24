@@ -15,5 +15,14 @@ public class Equipment {
         String dataToEncode = dataModel.getEmail() + dataModel.getPassword();
         return DigestUtils.md5Hex(dataToEncode);
     }
+    public String idEncoder(String email, String password) {
+        String dataToEncode = email + password;
+        return DigestUtils.md5Hex(dataToEncode);
+    }
+
+    public String idEncoder(String email) {
+        String dataToEncode = email;
+        return DigestUtils.md5Hex(dataToEncode);
+    }
 
 }

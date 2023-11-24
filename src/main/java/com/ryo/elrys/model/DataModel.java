@@ -23,10 +23,6 @@ import org.springframework.stereotype.Component;
 public class DataModel {
 
     @Nullable
-    @ApiModelProperty(hidden = true)
-    private String uuid;
-
-    @Nullable
     @Schema(name = "email", defaultValue = "ryo@gmail.com")
     private String email;
 
@@ -53,10 +49,8 @@ public class DataModel {
     private AdditionalInfo additional_info;
 
     public DataModel(AccountsModel accountsModel) {
-        Equipment equipment = new Equipment();
         this.email = accountsModel.getEmail();
         this.password = accountsModel.getPassword();
-        this.uuid = equipment.idEncoder(accountsModel);
     }
 
 }
