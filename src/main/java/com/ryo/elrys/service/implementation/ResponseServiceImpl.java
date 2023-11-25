@@ -101,4 +101,20 @@ public class ResponseServiceImpl implements ResponseService {
                 .build();
     }
 
+    @Override
+    public BodyResponse<Object> changePass(String email, String oldPassword, String newPassword) throws Exception {
+        Object findResponse = accountsService.changePassword(email, oldPassword, newPassword);
+        if (findResponse.equals("User Not Found")) {
+            return BodyResponse.builder()
+                    .status("Failed")
+                    .message("User Not Found")
+                    .build();
+        }
+        return BodyResponse.builder()
+                .status("Success")
+                .data(findResponse)
+                .message("Change Success")
+                .build();
+    }
+
 }

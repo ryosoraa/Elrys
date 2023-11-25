@@ -74,9 +74,13 @@ public class Accounts {
 
     }
 
-    @DeleteMapping("/pass")
-    public ResponseEntity<BodyResponse<Object>> changePass(@RequestBody AccountsModel accountsModel) throws Exception {
-        BodyResponse<Object> response = responseService.delete(accountsModel);
+    @GetMapping("/pass")
+    public ResponseEntity<BodyResponse<Object>> changePass(
+            @RequestParam String email,
+            @RequestParam String oldPass,
+            @RequestParam String newPass
+    ) throws Exception {
+        BodyResponse<Object> response = responseService.changePass(email, oldPass, newPass);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);
