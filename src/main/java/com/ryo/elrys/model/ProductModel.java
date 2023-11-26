@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class ProductModel {
+    private String email;
     private String type;
     private String title;
     private String director;

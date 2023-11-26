@@ -28,20 +28,14 @@ public class DataResponse {
 
     }
 
-    public HashMap<String, String> loginResponse() {
-
-        HashMap<String, String> response = new HashMap<>();
-        response.put("email", email);
-        response.put("timestamp", timesTamp);
-        return response;
-
-    }
-
     public DataResponse(AccountsModel accountsModel) {
+
         this.email = accountsModel.getEmail();
+        this.timesTamp = String.valueOf(new Timestamp(System.currentTimeMillis()));
     }
 
     public DataResponse(JsonNode jsonNode) {
+        System.out.println(jsonNode.toPrettyString());
         this.email = String.valueOf(jsonNode.at("/_source/email").asText());
         this.timesTamp = String.valueOf(new Timestamp(System.currentTimeMillis()));
     }

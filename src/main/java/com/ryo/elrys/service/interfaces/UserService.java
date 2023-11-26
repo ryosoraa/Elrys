@@ -9,21 +9,10 @@ import com.ryo.elrys.payload.DataResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserService {
-
-    // REGISTER
     BodyResponse<DataResponse> register(AccountsModel accountsModel) throws Exception;
-
-    // LOGIN
     BodyResponse<DataResponse> login(AccountsModel accountsModel, HttpServletRequest requestHeader) throws Exception;
-
-    // Find By Email
     BodyResponse<JsonNode> getInfo(String email) throws Exception;
-
-    // Update
-    Object update(DataModel dataModel) throws Exception;
-
-    // Delete
+    BodyResponse<JsonNode> update(DataModel dataModel) throws Exception;
     BodyResponse<JsonNode> delete(AccountsModel accountsModel) throws Exception;
-
-    Object changePassword(String email, String oldPassword, String newPassword) throws Exception;
+    BodyResponse<JsonNode> changePassword(String email, String oldPassword, String newPassword) throws Exception;
 }

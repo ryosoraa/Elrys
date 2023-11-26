@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
         return BodyResponse.<DataResponse>builder()
                 .status("Success")
-                .data(new DataResponse(register))
+                .data(new DataResponse(accountsModel))
                 .message("Resister Success")
                 .build();
     }
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     // Update
     @Override
-    public Object update(DataModel dataModel) throws Exception {
+    public BodyResponse<JsonNode> update(DataModel dataModel) throws Exception {
 
         JsonNode response = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmailAndPass(dataModel.getEmail(), dataModel.getPassword()));
         if(!String.valueOf(response.at("/hits/total/value")).equals("1")){
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Object changePassword(String email, String oldPassword, String newPassword) throws Exception {
+    public BodyResponse<JsonNode> changePassword(String email, String oldPassword, String newPassword) throws Exception {
 
         JsonNode response = requestApi.changePassword(BodyUrl.MAIN_UPDATE_QUERY.getUrl(), Query.UpdatePass(email, oldPassword, newPassword));
         if(!String.valueOf(response.at("/total")).equals("1")){
