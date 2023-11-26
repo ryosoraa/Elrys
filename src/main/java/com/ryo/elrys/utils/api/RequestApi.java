@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.elrys.enums.Options;
+import com.ryo.elrys.model.ProductModel;
 import com.sun.jersey.api.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class RequestApi {
         return client.getRequest(bodyUrl);
     }
 
-    public JsonNode register(String bodyUrl, String request) throws Exception {
+    public JsonNode register(String bodyUrl, String request) throws JsonProcessingException {
         return client.postRequest(bodyUrl, request);
     }
 
@@ -45,6 +46,22 @@ public class RequestApi {
     }
 
     public JsonNode changePassword(String bodyUrl, String request) throws Exception {
+        return client.postRequest(bodyUrl, request);
+    }
+
+    public JsonNode addProduct(String bodyUrl, String request) throws Exception{
+        return client.postRequest(bodyUrl, request);
+    }
+
+    public JsonNode getProduct(String bodyUrl, String request) throws Exception{
+        return client.postRequest(bodyUrl, request);
+    }
+
+    public JsonNode updateProduct(String bodyUrl, String request) throws Exception{
+        return client.postRequest(bodyUrl, request);
+    }
+
+    public JsonNode getProductOne(String bodyUrl, String request) throws Exception{
         return client.postRequest(bodyUrl, request);
     }
 

@@ -1,35 +1,39 @@
 package com.ryo.elrys.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ryo.elrys.model.AccountsModel;
 import com.ryo.elrys.model.DataModel;
 import com.ryo.elrys.payload.BodyResponse;
 import com.ryo.elrys.service.interfaces.ResponseService;
+import io.swagger.annotations.Api;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
-public class Accounts {
+@RequestMapping(value = "/api")
+@Api(value = "User", tags = "User-Controller")
+public class UserController {
 
     @Autowired
     ResponseService responseService;
 
     @PostMapping("/register")
-    public ResponseEntity<BodyResponse<Object>> register(@RequestBody AccountsModel accountsModel) throws Exception {
+    public ResponseEntity<BodyResponse<Object>> register(@RequestBody AccountsModel accountsModel) throws JsonProcessingException {
         BodyResponse<Object> response = responseService.register(accountsModel);
-        if (response.getStatus().equals("Success")){
-            return ResponseEntity.ok()
-                    .body(response);
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//        if (!response.getStatus().equals("Success")){
+//            return ResponseEntity.ok()
+//                    .body(response);
+//        }
+        return ResponseEntity.ok()
                 .body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<BodyResponse<Object>> login(@RequestBody AccountsModel accountsModel) throws Exception {
-        BodyResponse<Object> response = responseService.login(accountsModel);
+    public ResponseEntity<BodyResponse<Object>> login(@RequestBody AccountsModel accountsModel, HttpServletRequest requestHeader) throws Exception {
+        BodyResponse<Object> response = responseService.login(accountsModel, requestHeader);
         if (response.getStatus().equals("Success")){
             return ResponseEntity.ok()
                     .body(response);
@@ -86,6 +90,18 @@ public class Accounts {
                     .body(response);
         }
         return ResponseEntity.status(404)
+                .body(response);
+
+    }
+
+    @PutMapping("/getLog")
+    public ResponseEntity<BodyResponse<Object>> getLog(@RequestBody DataModel dataModel) throws Exception {
+        BodyResponse<Object> response = responseService.update(dataModel);
+        if (response.getStatus().equals("Success")){
+            return ResponseEntity.ok()
+                    .body(response);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
 
     }

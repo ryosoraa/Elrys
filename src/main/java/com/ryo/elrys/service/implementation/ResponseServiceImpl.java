@@ -1,12 +1,15 @@
 package com.ryo.elrys.service.implementation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ryo.elrys.exceptions.UserNotFoundException;
 import com.ryo.elrys.model.AccountsModel;
 import com.ryo.elrys.model.DataModel;
 import com.ryo.elrys.payload.BodyResponse;
 import com.ryo.elrys.payload.DataResponse;
-import com.ryo.elrys.service.interfaces.AccountsService;
+import com.ryo.elrys.service.interfaces.UserService;
 import com.ryo.elrys.service.interfaces.ResponseService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +17,14 @@ import org.springframework.stereotype.Service;
 public class ResponseServiceImpl implements ResponseService {
 
     @Autowired
-    AccountsService accountsService;
+    UserService userService;
 
     @Override
-    public BodyResponse<Object> register(AccountsModel accountsModel) throws Exception {
-        Object response = accountsService.register(accountsModel);
+    public BodyResponse<Object> register(AccountsModel accountsModel) throws Exception{
+        Object response = userService.register(accountsModel);
 
-        if (response.equals("Accounts already exists")) {
-            return BodyResponse.builder()
-                    .status("Failed")
-                    .message("Accounts already exist")
-                    .build();
+        if (response.equals("UserController already exists")) {
+            throw new UserNotFoundException("User Not");
         }
 
         return BodyResponse.builder()
@@ -35,8 +35,8 @@ public class ResponseServiceImpl implements ResponseService {
     }
 
     @Override
-    public BodyResponse<Object> login(AccountsModel accountsModel) throws Exception {
-        Object loginResponse = accountsService.login(accountsModel);
+    public BodyResponse<Object> login(AccountsModel accountsModel, HttpServletRequest requestHeader) throws Exception {
+        Object loginResponse = userService.login(accountsModel, requestHeader);
 
         if (loginResponse.equals("User not found")) {
             return BodyResponse.builder()
@@ -54,12 +54,12 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public BodyResponse<Object> getInfo(String email) throws Exception {
-        Object findResponse = accountsService.getInfo(email);
+        Object findResponse = userService.getInfo(email);
 
         if (findResponse.equals("not found")) {
             return BodyResponse.builder()
                     .status("Failed")
-                    .message("Accounts not found")
+                    .message("UserController not found")
                     .build();
         }
         return BodyResponse.builder()
@@ -71,7 +71,7 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public BodyResponse<Object> update(DataModel dataModel) throws Exception {
-        Object findResponse = accountsService.update(dataModel);
+        Object findResponse = userService.update(dataModel);
         if (findResponse.equals("User not found")) {
             return BodyResponse.builder()
                     .status("Failed")
@@ -87,7 +87,7 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public BodyResponse<Object> delete(AccountsModel accountsModel) throws Exception {
-        Object findResponse = accountsService.delete(accountsModel);
+        Object findResponse = userService.delete(accountsModel);
         if (findResponse.equals("User Not Found")) {
             return BodyResponse.builder()
                     .status("Failed")
@@ -103,7 +103,7 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Override
     public BodyResponse<Object> changePass(String email, String oldPassword, String newPassword) throws Exception {
-        Object findResponse = accountsService.changePassword(email, oldPassword, newPassword);
+        Object findResponse = userService.changePassword(email, oldPassword, newPassword);
         if (findResponse.equals("User Not Found")) {
             return BodyResponse.builder()
                     .status("Failed")
@@ -116,5 +116,7 @@ public class ResponseServiceImpl implements ResponseService {
                 .message("Change Success")
                 .build();
     }
+
+
 
 }
