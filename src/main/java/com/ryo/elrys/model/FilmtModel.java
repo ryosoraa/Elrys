@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProductModel {
+public class FilmtModel {
     private String email;
     private String type;
     private String title;

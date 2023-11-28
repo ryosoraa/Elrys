@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryo.elrys.enums.Options;
-import com.ryo.elrys.model.ProductModel;
 import com.sun.jersey.api.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,19 +48,27 @@ public class RequestApi {
         return client.postRequest(bodyUrl, request);
     }
 
-    public JsonNode addProduct(String bodyUrl, String request) throws Exception{
+    public JsonNode addFilm(String bodyUrl, String request) throws Exception{
         return client.postRequest(bodyUrl, request);
     }
 
-    public JsonNode getProduct(String bodyUrl, String request) throws Exception{
+    public JsonNode getFilm(String bodyUrl, String request) throws Exception{
         return client.postRequest(bodyUrl, request);
     }
 
-    public JsonNode updateProduct(String bodyUrl, String request) throws Exception{
+    public JsonNode updateFilm(String bodyUrl, String request) throws Exception{
         return client.postRequest(bodyUrl, request);
     }
 
-    public JsonNode getProductOne(String bodyUrl, String request) throws Exception{
+    public JsonNode getFilmOne(String bodyUrl, String request) throws Exception{
+        return client.postRequest(bodyUrl, request);
+    }
+
+    public JsonNode searchFilm(String bodyUrl, String request) throws Exception{
+        return client.postRequest(bodyUrl, request);
+    }
+
+    public JsonNode analyst(String bodyUrl, String request) throws Exception{
         return client.postRequest(bodyUrl, request);
     }
 

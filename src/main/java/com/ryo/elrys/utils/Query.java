@@ -31,6 +31,7 @@ public class Query {
 
         return String.format("""
                 {
+                  "size": 0,
                   "query": {
                     "wildcard": {
                       "email.keyword": {
@@ -74,5 +75,32 @@ public class Query {
                   }
                 }
                 """, email, oldPassword, newPassword);
+    }
+
+    public static String search(String type, String value){
+        return String.format("""
+                {
+                  "query": {
+                    "match": {
+                      "%s": "%s"
+                    }
+                  }
+                }
+                """, type, value);
+    }
+    
+    public static String categorizText(String type){
+        return String.format("""
+                {
+                    "size":0,
+                    "aggs":{
+                        "text_categories":{
+                            "categorize_text": {
+                                "field": "%s"
+                            }
+                        }
+                    }
+                }
+                """, type);
     }
 }

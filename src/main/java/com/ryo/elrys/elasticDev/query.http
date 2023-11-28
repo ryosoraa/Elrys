@@ -1,0 +1,29 @@
+POST http://192.168.20.90:9200/elrys_film/_search
+
+###
+POST http://192.168.20.90:9200/elrys_film/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "match": {
+      "genre": "action"
+    }
+  }
+}
+
+###
+
+POST http://192.168.20.90:9200/elrys_film/_search
+Content-Type: application/json
+
+{
+  "size":0,
+  "aggs":{
+    "text_categories":{
+      "categorize_text": {
+        "field": "genre"
+      }
+    }
+  }
+}
