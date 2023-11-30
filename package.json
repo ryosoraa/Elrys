@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "html2markdown": "^1.1.0"
+  }
+}
