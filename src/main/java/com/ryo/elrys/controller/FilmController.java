@@ -41,7 +41,7 @@ public class FilmController {
         @GetMapping("/analyst")
         public ResponseEntity<BodyResponse<JsonNode>> analyst(
                         @Parameter(explode = Explode.TRUE, name = "type", in = ParameterIn.QUERY, description = "search film by conditions", schema = @Schema(type = "String", defaultValue = "genre", allowableValues = {
-                                        "type", "director", "release_year", "genre", "rating", "format", "runtime",
+                                        "type", "director", "release", "genre", "rating", "format",
                                         "language", "subtitles",
                                         "price" })) @RequestParam(name = "type", defaultValue = "genre") String type)
                         throws Exception {

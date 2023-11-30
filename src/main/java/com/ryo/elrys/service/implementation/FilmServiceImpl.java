@@ -63,7 +63,16 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public BodyResponse<JsonNode> analyst(String type) throws Exception {
-        JsonNode response = requestApi.analyst(BodyUrl.FILM_SEARCH.getUrl(), Query.categorizText(type));
+
+        JsonNode response = switch (type) {
+            case "type", "director", "genre", "format", "language", "subtitles" ->
+                requestApi.analyst(BodyUrl.FILM_SEARCH.getUrl(), Query.categorizText(type));
+
+            case "release", "rating", "price" ->
+                requestApi.analyst(BodyUrl.FILM_SEARCH.getUrl(), Query.filmYearAnalyst(type));
+
+            default -> throw new IllegalArgumentException("Unexpected value: " + type);
+        };
 
         if (String.valueOf(response.at("/hits/total/value")).equals("0")) {
             throw new UserNotFoundException("Request Not Found");
@@ -71,7 +80,7 @@ public class FilmServiceImpl implements FilmService {
 
         return BodyResponse.<JsonNode>builder()
                 .status("Success")
-                .data(response.path("aggregations").path("text_categories").path("buckets"))
+                .data(response)
                 .message("Data Founded")
                 .build();
     }
