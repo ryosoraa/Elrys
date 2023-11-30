@@ -1,159 +1,71 @@
----
-generator: Apache Maven Doxia Site Renderer 1.11.1
-lang: en
-title: Elrys -- Dependency Information
-viewport: width=device-width, initial-scale=1.0
----
+Elrys – Dependency Information
 
-::: {#banner}
-::: {#bannerLeft}
 Elrys
-:::
 
-::: clear
+---
 
-------------------------------------------------------------------------
-:::
-:::
+Last Published: 2023-11-30 | Version: 0.0.1-SNAPSHOT
 
-::: {#breadcrumbs}
-::: xleft
-[Last Published: 2023-11-30]{#publishDate} \| [Version:
-0.0.1-SNAPSHOT]{#projectVersion}
-:::
-
-::: xright
 [Elrys](./ "Elrys")
-:::
 
-::: clear
+---
 
-------------------------------------------------------------------------
-:::
-:::
-
-::: {#leftColumn}
-::: {#navcolumn}
 ##### Project Documentation
 
--   [Project Information](project-info.html "Project Information")
-    -   [Dependencies](dependencies.html "Dependencies")
-    -   **Dependency Information**
-    -   [Dependency
-        Management](dependency-management.html "Dependency Management")
-    -   [About](index.html "About")
-    -   [Licenses](licenses.html "Licenses")
-    -   [Plugin Management](plugin-management.html "Plugin Management")
-    -   [Plugins](plugins.html "Plugins")
-    -   [Source Code Management](scm.html "Source Code Management")
-    -   [Summary](summary.html "Summary")
-    -   [Team](team.html "Team")
+- [Project Information](project-info.html "Project Information")
+  - [Dependencies](dependencies.html "Dependencies")
+  - **Dependency Information**
+  - [Dependency Management](dependency-management.html "Dependency Management")
+  - [About](index.html "About")
+  - [Licenses](licenses.html "Licenses")
+  - [Plugin Management](plugin-management.html "Plugin Management")
+  - [Plugins](plugins.html "Plugins")
+  - [Source Code Management](scm.html "Source Code Management")
+  - [Summary](summary.html "Summary")
+  - [Team](team.html "Team")
 
-[![Built by
-Maven](./images/logos/maven-feather.png){.poweredBy}](http://maven.apache.org/ "Built by Maven"){.poweredBy}
-:::
-:::
+[![Built by Maven](./images/logos/maven-feather.png)](http://maven.apache.org/ "Built by Maven")
 
-::: {#bodyColumn}
-::: {#contentBox}
-::: section
-## []{#Dependency_Information}Dependency Information
+## Dependency Information
 
-[]{#Dependency_Information}
+### Apache Maven
 
-::: section
-### []{#Apache_Maven}Apache Maven
+<dependency>
+  <groupId>com.ryo</groupId>
+  <artifactId>Elrys</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
 
-[]{#Apache_Maven}
+### Apache Buildr
 
-::: source
-    <dependency>
-      <groupId>com.ryo</groupId>
-      <artifactId>Elrys</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-:::
-:::
+'com.ryo:Elrys:jar:0.0.1-SNAPSHOT'
 
-::: section
-### []{#Apache_Buildr}Apache Buildr
+### Apache Ivy
 
-[]{#Apache_Buildr}
+<dependency org="com.ryo" name="Elrys" rev="0.0.1-SNAPSHOT">
+  <artifact name="Elrys" type="jar" />
+</dependency>
 
-::: source
-    'com.ryo:Elrys:jar:0.0.1-SNAPSHOT'
-:::
-:::
+### Groovy Grape
 
-::: section
-### []{#Apache_Ivy}Apache Ivy
+@Grapes(
+@Grab(group='com.ryo', module='Elrys', version='0.0.1-SNAPSHOT')
+)
 
-[]{#Apache_Ivy}
+### Gradle/Grails
 
-::: source
-    <dependency org="com.ryo" name="Elrys" rev="0.0.1-SNAPSHOT">
-      <artifact name="Elrys" type="jar" />
-    </dependency>
-:::
-:::
+compile 'com.ryo:Elrys:0.0.1-SNAPSHOT'
 
-::: section
-### []{#Groovy_Grape}Groovy Grape
+### Scala SBT
 
-[]{#Groovy_Grape}
+libraryDependencies += "com.ryo" % "Elrys" % "0.0.1-SNAPSHOT"
 
-::: source
-    @Grapes(
-    @Grab(group='com.ryo', module='Elrys', version='0.0.1-SNAPSHOT')
-    )
-:::
-:::
+### Leiningen
 
-::: section
-### []{#Gradle.2FGrails}Gradle/Grails
+\[com.ryo/Elrys "0.0.1-SNAPSHOT"\]
 
-[]{#Gradle.2FGrails}
+---
 
-::: source
-    compile 'com.ryo:Elrys:0.0.1-SNAPSHOT'
-:::
-:::
-
-::: section
-### []{#Scala_SBT}Scala SBT
-
-[]{#Scala_SBT}
-
-::: source
-    libraryDependencies += "com.ryo" % "Elrys" % "0.0.1-SNAPSHOT"
-:::
-:::
-
-::: section
-### []{#Leiningen}Leiningen
-
-[]{#Leiningen}
-
-::: source
-    [com.ryo/Elrys "0.0.1-SNAPSHOT"]
-:::
-:::
-:::
-:::
-:::
-
-::: clear
-
-------------------------------------------------------------------------
-:::
-
-::: {#footer}
-::: xright
 Copyright © 2023..
-:::
 
-::: clear
-
-------------------------------------------------------------------------
-:::
-:::
+---
