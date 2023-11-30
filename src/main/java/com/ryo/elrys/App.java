@@ -1,15 +1,15 @@
 /**
- * !Dear Maintainer
+ ** !Dear Maintainer
  * 
- ** When i write this code, only I and god
- ** knew what it was.
- * 
- * !Now, only God knows
- * 
- ** So if you are done trying to 'optimize' 
- ** this code (and failed), 
- ** please increment the following counter as warning 
- ** to the next guy
+ *  When i write this code, only I and god
+ *  knew what it was.
+ *  
+ *  Now, only God knows!!
+ *  
+ *  So if you are done trying to 'optimize' 
+ *  this code (and failed), 
+ *  please increment the following counter as warning 
+ *  to the next guy
  * 
  * @Ryo the developer
  * --
