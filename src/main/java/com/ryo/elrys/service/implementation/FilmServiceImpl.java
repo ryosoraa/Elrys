@@ -26,10 +26,15 @@ public class FilmServiceImpl implements FilmService {
     Equipment equipment;
 
     @Override
-    public BodyResponse<JsonNode> addProduct(FilmtModel filmtModel) throws Exception{
+    public BodyResponse<JsonNode> addProduct(FilmtModel filmtModel) throws Exception {
         System.out.println(filmtModel.getEmail());
-        System.out.println(requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmail(filmtModel.getEmail())).toPrettyString());
-        if(!String.valueOf(requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmail(filmtModel.getEmail())).at("/hits/total/value")).equals("1")){
+        System.out.println(
+                requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmail(filmtModel.getEmail()))
+                        .toPrettyString());
+        if (!String.valueOf(
+                requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmail(filmtModel.getEmail()))
+                        .at("/hits/total/value"))
+                .equals("1")) {
             throw new UserNotFoundException("User Not Found");
         }
 
@@ -42,10 +47,10 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public BodyResponse<JsonNode> search(String type, String value) throws Exception{
+    public BodyResponse<JsonNode> search(String type, String value) throws Exception {
         JsonNode response = requestApi.searchFilm(BodyUrl.FILM_SEARCH.getUrl(), Query.search(type, value));
 
-        if(String.valueOf(response.at("/hits/total/value")).equals("0")){
+        if (String.valueOf(response.at("/hits/total/value")).equals("0")) {
             throw new UserNotFoundException("Request Not Found");
         }
 
@@ -57,10 +62,10 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public BodyResponse<JsonNode> analyst(String type) throws Exception{
+    public BodyResponse<JsonNode> analyst(String type) throws Exception {
         JsonNode response = requestApi.analyst(BodyUrl.FILM_SEARCH.getUrl(), Query.categorizText(type));
 
-        if(String.valueOf(response.at("/hits/total/value")).equals("0")){
+        if (String.valueOf(response.at("/hits/total/value")).equals("0")) {
             throw new UserNotFoundException("Request Not Found");
         }
 
