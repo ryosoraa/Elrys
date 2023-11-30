@@ -19,16 +19,29 @@ public class FilmController {
         @Autowired
         FilmService filmService;
 
+        /**
+         * Menambahkan film baru
+         * 
+         * @param filmtModel objek model film
+         * @return respon berupa status dan data film baru
+         */
         @PostMapping("/addFilm")
         public ResponseEntity<BodyResponse<JsonNode>> addFilm(@RequestBody FilmtModel filmtModel) throws Exception {
                 return ResponseEntity.ok()
                                 .body(filmService.addProduct(filmtModel));
         }
 
+        /**
+         * Mencari film berdasarkan kriteria
+         * 
+         * @param type  jenis pencarian (judul, sutradara, dll)
+         * @param value nilai kriteria pencarian
+         * @return respon berupa status dan data film hasil pencarian
+         */
         @GetMapping("/search")
         public ResponseEntity<BodyResponse<JsonNode>> search(
                         @Parameter(explode = Explode.TRUE, name = "type", in = ParameterIn.QUERY, description = "search film by conditions", schema = @Schema(type = "String", defaultValue = "title", allowableValues = {
-                                        "type", "title", "director", "release_year", "genre", "rating", "format",
+                                        "type", "title", "director", "release", "genre", "rating", "format",
                                         "runtime", "language", "subtitles",
                                         "price" })) @RequestParam(name = "type", defaultValue = "title") String type,
                         @Parameter(explode = Explode.TRUE, name = "value", in = ParameterIn.QUERY, description = "value to search", schema = @Schema(type = "String", defaultValue = "Harry Potter")) @RequestParam(name = "value", defaultValue = "Harry potter") String value
@@ -38,6 +51,12 @@ public class FilmController {
                                 .body(filmService.search(type, value));
         }
 
+        /**
+         * Analyst film berdasarkan kriteria
+         * 
+         * @param type jenis pencarian (judul, sutradara, dll)
+         * @return respon berupa status dan jumlah data film hasil pencarian
+         */
         @GetMapping("/analyst")
         public ResponseEntity<BodyResponse<JsonNode>> analyst(
                         @Parameter(explode = Explode.TRUE, name = "type", in = ParameterIn.QUERY, description = "search film by conditions", schema = @Schema(type = "String", defaultValue = "genre", allowableValues = {

@@ -25,12 +25,15 @@ public class FilmServiceImpl implements FilmService {
     @Autowired
     Equipment equipment;
 
+    /**
+     * Menambahkan film
+     *
+     * @param filmtModel Objek model film yang akan ditambahkan.
+     * @return ResponseEntity berisi BodyResponse dengan status dan data penambahan produk film.
+     * @throws Exception Jika terjadi kesalahan selama proses penambahan film.
+     */
     @Override
     public BodyResponse<JsonNode> addProduct(FilmtModel filmtModel) throws Exception {
-        System.out.println(filmtModel.getEmail());
-        System.out.println(
-                requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmail(filmtModel.getEmail()))
-                        .toPrettyString());
         if (!String.valueOf(
                 requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmail(filmtModel.getEmail()))
                         .at("/hits/total/value"))
@@ -43,9 +46,16 @@ public class FilmServiceImpl implements FilmService {
                 .data(requestApi.addFilm(BodyUrl.FILM_DOC.getUrl(), mapper.writeValueAsString(filmtModel)))
                 .message("Add Product Success")
                 .build();
-
     }
 
+    /**
+     * Mencari film berdasarkan jenis pencarian dan nilai pencarian.
+     *
+     * @param type  Jenis pencarian (contoh: "title", "director", "genre").
+     * @param value Nilai pencarian yang akan digunakan.
+     * @return ResponseEntity berisi BodyResponse dengan status dan data hasil pencarian.
+     * @throws Exception Jika terjadi kesalahan selama proses pencarian.
+     */
     @Override
     public BodyResponse<JsonNode> search(String type, String value) throws Exception {
         JsonNode response = requestApi.searchFilm(BodyUrl.FILM_SEARCH.getUrl(), Query.search(type, value));
@@ -61,9 +71,16 @@ public class FilmServiceImpl implements FilmService {
                 .build();
     }
 
+    /**
+     * Menganalisis data film berdasarkan jenis analisis yang diberikan.
+     *
+     * @param type Jenis analisis (contoh: "type", "director", "genre", "format", "language", "subtitles")
+     * . Juga dapat berupa ("release", "rating", "price").
+     * @return ResponseEntity berisi BodyResponse dengan status dan hasil analisis data film.
+     * @throws Exception Jika terjadi kesalahan selama proses analisis.
+     */
     @Override
     public BodyResponse<JsonNode> analyst(String type) throws Exception {
-
         JsonNode response = switch (type) {
             case "type", "director", "genre", "format", "language", "subtitles" ->
                 requestApi.analyst(BodyUrl.FILM_SEARCH.getUrl(), Query.categorizText(type));

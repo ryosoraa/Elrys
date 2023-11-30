@@ -13,7 +13,6 @@ import com.ryo.elrys.payload.BodyResponse;
 import com.ryo.elrys.payload.DataResponse;
 import com.ryo.elrys.service.interfaces.UserService;
 import com.ryo.elrys.utils.Equipment;
-
 import com.ryo.elrys.utils.Query;
 import com.ryo.elrys.utils.api.RequestApi;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,12 +31,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     ObjectMapper mapper;
 
-    // REGISTER
+    /**
+     * Mendaftarkan user baru
+     *
+     * @param accountsModel Objek model akun yang akan didaftarkan.
+     * @return ResponseEntity berisi BodyResponse dengan status dan data registrasi.
+     * @throws Exception Jika terjadi kesalahan selama proses registrasi.
+     */
     @Override
     public BodyResponse<DataResponse> register(AccountsModel accountsModel) throws Exception {
-        JsonNode register = requestApi.register(BodyUrl.MAIN_CREATED.getUrl().concat(equipment.idEncoder(accountsModel.getEmail())), mapper.writeValueAsString(new DataModel(accountsModel)));
+        JsonNode register = requestApi.register(
+                BodyUrl.MAIN_CREATED.getUrl().concat(equipment.idEncoder(accountsModel.getEmail())),
+                mapper.writeValueAsString(new DataModel(accountsModel)));
 
-        if(register.has("error")){
+        if (register.has("error")) {
             throw new UserAlreadyExistsException("User Already Exists");
         }
 
@@ -48,17 +55,27 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    // LOGIN
+    /**
+     * login user
+     *
+     * @param accountsModel Objek model akun yang digunakan untuk login.
+     * @param requestHeader HttpServletRequest untuk mendapatkan header dari request.
+     * @return ResponseEntity berisi BodyResponse dengan status dan data login.
+     * @throws Exception Jika terjadi kesalahan selama proses login.
+     */
     @Override
-    public BodyResponse<DataResponse> login(AccountsModel accountsModel, HttpServletRequest requestHeader) throws Exception {
+    public BodyResponse<DataResponse> login(AccountsModel accountsModel, HttpServletRequest requestHeader)
+            throws Exception {
 
-        JsonNode responds = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmailAndPass(accountsModel.getEmail(), accountsModel.getPassword()));
+        JsonNode responds = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(),
+                Query.SearchByEmailAndPass(accountsModel.getEmail(), accountsModel.getPassword()));
 
-        if(!String.valueOf(responds.at("/hits/total/value")).equals("1")){
+        if (!String.valueOf(responds.at("/hits/total/value")).equals("1")) {
             throw new UserNotFoundException("User Not Found");
         }
 
-        requestApi.login(BodyUrl.LOG_DOC.getUrl(), mapper.writeValueAsString(new LoginModel(accountsModel, requestHeader)));
+        requestApi.login(BodyUrl.LOG_DOC.getUrl(),
+                mapper.writeValueAsString(new LoginModel(accountsModel, requestHeader)));
 
         return BodyResponse.<DataResponse>builder()
                 .status("Success")
@@ -68,7 +85,13 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    // Find By Email
+    /**
+     * Mengambil informasi user berdasarkan alamat email.
+     *
+     * @param email Alamat email user.
+     * @return ResponseEntity berisi BodyResponse dengan status dan informasi user.
+     * @throws Exception Jika terjadi kesalahan selama proses pengambilan informasi.
+     */
     @Override
     public BodyResponse<JsonNode> getInfo(String email) throws Exception {
 
@@ -84,44 +107,70 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    // Update
+    /**
+     * Memperbarui informasi user.
+     *
+     * @param dataModel Objek model data yang akan digunakan untuk memperbarui informasi user.
+     * @return ResponseEntity berisi BodyResponse dengan status dan informasi user yang diperbarui.
+     * @throws Exception Jika terjadi kesalahan selama proses pembaruan.
+     */
     @Override
     public BodyResponse<JsonNode> update(DataModel dataModel) throws Exception {
 
-        JsonNode response = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(), Query.SearchByEmailAndPass(dataModel.getEmail(), dataModel.getPassword()));
-        if(!String.valueOf(response.at("/hits/total/value")).equals("1")){
+        JsonNode response = requestApi.findByRequest(BodyUrl.MAIN_SEARCH.getUrl(),
+                Query.SearchByEmailAndPass(dataModel.getEmail(), dataModel.getPassword()));
+        if (!String.valueOf(response.at("/hits/total/value")).equals("1")) {
             throw new UserNotFoundException("User Not Found");
         }
         return BodyResponse.<JsonNode>builder()
                 .status("Success")
-                .data(requestApi.update(BodyUrl.MAIN_DOC.getUrl().concat(response.at("/hits/hits/0/_id").asText()), mapper.writeValueAsString(dataModel)))
+                .data(requestApi.update(BodyUrl.MAIN_DOC.getUrl().concat(response.at("/hits/hits/0/_id").asText()),
+                        mapper.writeValueAsString(dataModel)))
                 .message("Update Success")
                 .build();
     }
 
-    // Delete
+    /**
+     * Menghapus akun user.
+     *
+     * @param accountsModel Objek model akun yang akan dihapus.
+     * @return ResponseEntity berisi BodyResponse dengan status hasil penghapusan.
+     * @throws Exception Jika terjadi kesalahan selama proses penghapusan.
+     */
     @Override
     public BodyResponse<JsonNode> delete(AccountsModel accountsModel) throws Exception {
 
-        JsonNode response = requestApi.delete(BodyUrl.MAIN_DELETE_QUERY.getUrl(), Query.SearchByEmailAndPass(accountsModel.getEmail(), accountsModel.getPassword()));
+        JsonNode response = requestApi.delete(BodyUrl.MAIN_DELETE_QUERY.getUrl(),
+                Query.SearchByEmailAndPass(accountsModel.getEmail(), accountsModel.getPassword()));
         System.out.println(response.toPrettyString());
 
-        if(String.valueOf(response.at("/deleted")).equals("0")){
+        if (String.valueOf(response.at("/deleted")).equals("0")) {
             throw new UserNotFoundException("User Not Found");
         }
         return BodyResponse.<JsonNode>builder()
                 .status("Success")
-                .data(requestApi.delete(BodyUrl.LOG_DELETE_QUERY.getUrl(), Query.SearchByEmail(accountsModel.getEmail())))
+                .data(requestApi.delete(BodyUrl.LOG_DELETE_QUERY.getUrl(),
+                        Query.SearchByEmail(accountsModel.getEmail())))
                 .message("Deleted Success")
                 .build();
     }
 
-
+    /**
+     * Mengganti kata sandi user.
+     *
+     * @param email       Alamat email user.
+     * @param oldPassword Kata sandi lama user.
+     * @param newPassword Kata sandi baru yang akan diatur.
+     * @return ResponseEntity berisi BodyResponse dengan status hasil perubahan kata sandi.
+     * @throws Exception Jika terjadi kesalahan selama proses perubahan kata sandi.
+     */
     @Override
-    public BodyResponse<JsonNode> changePassword(String email, String oldPassword, String newPassword) throws Exception {
+    public BodyResponse<JsonNode> changePassword(String email, String oldPassword, String newPassword)
+            throws Exception {
 
-        JsonNode response = requestApi.changePassword(BodyUrl.MAIN_UPDATE_QUERY.getUrl(), Query.UpdatePass(email, oldPassword, newPassword));
-        if(!String.valueOf(response.at("/total")).equals("1")){
+        JsonNode response = requestApi.changePassword(BodyUrl.MAIN_UPDATE_QUERY.getUrl(),
+                Query.UpdatePass(email, oldPassword, newPassword));
+        if (!String.valueOf(response.at("/total")).equals("1")) {
             throw new UserNotFoundException("User Not Found");
         }
         return BodyResponse.<JsonNode>builder()
@@ -132,5 +181,3 @@ public class UserServiceImpl implements UserService {
     }
 
 }
-
-
